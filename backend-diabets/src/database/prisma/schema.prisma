@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      Int                     @id @default(autoincrement())
+  email                   String                  @unique
+  name                    String?
+  password                String
+  capillary_blood_glucose CapillaryBloodGlucose[]
+
+  @@map("users")
+}
+
+model CapillaryBloodGlucose {
+  id                Int      @id @default(autoincrement())
+  value             Int
+  date_time_collect DateTime
+  period            String
+  User              User?    @relation(fields: [user_id], references: [id])
+  user_id           Int?
+
+  @@map("capillary_blood_glucose")
+}

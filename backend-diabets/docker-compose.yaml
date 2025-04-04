@@ -1,0 +1,39 @@
+services:
+  diabets-postgres:
+    image: postgres
+    container_name: diabets-postgres
+    volumes:
+      - diabets_vol:/data/postgres
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: diabets
+      PGDATA: /data/postgres
+    ports:
+      - '5437:5432'
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin_diabets:
+    container_name: pgadmin_diabets
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-root@email.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_diabets_vol:/var/lib/pgadmin
+    ports:
+      - '${PGADMIN_PORT:-5051}:80'
+    networks:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  diabets_vol:
+  pgadmin_diabets_vol:
+
+networks:
+  postgres:
+    driver: bridge
