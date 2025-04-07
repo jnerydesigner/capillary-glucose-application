@@ -8,6 +8,7 @@ import {
 } from '../mapper/capillary.mapper';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { GlucoseResponse } from '@app/upload/upload.service';
+import { getPeriod } from '@app/utils/format-period.utils';
 
 export class CapillaryPrismaImplements implements CapillaryInterface {
   private logger: Logger;
@@ -16,17 +17,18 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
   }
 
   async create(capillary: CreateCapillaryDTO): Promise<any> {
+    const periodFormated = getPeriod();
     await this.prisma.capillaryBloodGlucose.deleteMany({
       where: {
-        period: capillary.period,
+        period: periodFormated,
       },
     });
     const createCapillary = await this.prisma.capillaryBloodGlucose.create({
       data: {
-        date_time_collect: capillary.dateTime,
+        date_time_collect: new Date(),
         value: capillary.value,
         user_id: capillary.userId,
-        period: capillary.period,
+        period: periodFormated,
       },
     });
 

@@ -9,7 +9,6 @@ export class CapillaryBloodGlucoseController {
   ) {}
   @Post()
   capillaryCreate(@Body() body: CreateCapillaryDTO) {
-    console.log(body.dateTime);
     return this.capillaryBloodGlucoseService.create(body);
   }
 
