@@ -13,8 +13,7 @@ export class CapillaryBloodGlucoseService {
     private readonly capillaryRepository: CapillaryInterface,
   ) {}
   create(input: CreateCapillaryDTO) {
-    // const dateStr = new Date().toISOString();
-    const periodFormated = getPeriod(input.dateTime);
+    const periodFormated = getPeriod();
 
     const inputNew = {
       ...input,

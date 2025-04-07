@@ -23,18 +23,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Link } from "react-router";
-import { useState } from "react";
-import { SheetCapillaryGlucoseForm } from "./sheet-capillary-glucose-form";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
-import { CapillaryGlucoseForm } from "./capillary-glucose-form";
-import { DialogTitle } from "@radix-ui/react-dialog";
 
 const FormSchema = z.object({
   dateInitial: z.date({
@@ -52,15 +40,6 @@ interface DatePickerFormProps {
 }
 
 export function DatePickerForm({ onSubmit }: DatePickerFormProps) {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-
-  const handleOpenSheet = () => {
-    setIsSheetOpen(true);
-  };
-
-  const handleCloseSheet = () => {
-    setIsSheetOpen(false);
-  };
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -165,26 +144,18 @@ export function DatePickerForm({ onSubmit }: DatePickerFormProps) {
               </FormItem>
             )}
           />
-          <div className="w-[150px] h-full flex justify-center items-center">
+          <div className="w-auto h-full flex justify-center items-center gap-2 mr-[30px] px-4">
             <Button type="submit" className="cursor-pointer">
               Filtrar Data
+            </Button>
+
+            <Button type="submit" className="cursor-pointer">
+              <Link to="/create-glucose">Cria Apontamento da Glicose</Link>
             </Button>
           </div>
         </form>
         <Toaster />
       </Form>
-
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetTrigger>
-          <Button className="cursor-pointer">Inserir Glicose</Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <DialogTitle>Formulário</DialogTitle>
-            <CapillaryGlucoseForm onClose={() => setIsSheetOpen(false)} />
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
     </>
   );
 }

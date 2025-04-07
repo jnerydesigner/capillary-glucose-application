@@ -1,3 +1,4 @@
+import { dataManaus } from "@/utils/dayjs";
 import { ApiAxios } from "./api-config";
 
 export const fetchCapillary = async ({
@@ -21,7 +22,7 @@ export const fetchCapillary = async ({
 
 export const fetchCreateGlucose = async (value: number) => {
   const create: InputGlucose = {
-    dateTime: new Date("2025-04-06T06:47:03.009Z").toISOString(),
+    dateTime: dataManaus.format(),
     userId: 1,
     period: "06:00",
     value,
