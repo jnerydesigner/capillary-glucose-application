@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CapillaryBloodGlucoseService } from './capillary-blood-glucose.service';
 import { CreateCapillaryDTO } from './dto/create.dto';
 
@@ -15,5 +15,23 @@ export class CapillaryBloodGlucoseController {
   @Get('/:userId')
   findOne(@Param('userId') userid: string) {
     return this.capillaryBloodGlucoseService.findOne(parseInt(userid));
+  }
+  @Post('/:userId/new')
+  async findOneNew(@Param('userId') userid: string) {
+    return this.capillaryBloodGlucoseService.findOneNew(parseInt(userid));
+  }
+
+  @Get('/:userId/capillary')
+  async findOneNewCapillary(
+    @Param('userId') userid: string,
+    @Query('dateInitial') dateInitial: string,
+    @Query('dateFinal') dateFinal: string,
+  ) {
+    console.log(dateInitial, dateFinal);
+    return this.capillaryBloodGlucoseService.findCapillary(
+      parseInt(userid),
+      dateInitial,
+      dateFinal,
+    );
   }
 }
