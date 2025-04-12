@@ -34,4 +34,18 @@ export class CapillaryBloodGlucoseController {
       dateFinal,
     );
   }
+
+  @Get('/:userId/capillary/report')
+  async generateReportCapillary(
+    @Param('userId') userid: string,
+    @Query('dateInitial') dateInitial: string,
+    @Query('dateFinal') dateFinal: string,
+  ) {
+    console.log(dateInitial, dateFinal);
+    return this.capillaryBloodGlucoseService.findCapillary(
+      parseInt(userid),
+      dateInitial,
+      dateFinal,
+    );
+  }
 }

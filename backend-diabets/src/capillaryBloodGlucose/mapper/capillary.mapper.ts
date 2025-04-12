@@ -1,4 +1,3 @@
-import { formatDateTime } from '@app/utils/format-date-time.utils';
 import { CapillaryBloodGlucose, Prisma, User } from '@prisma/client';
 import { GlucoseMeasurement } from '@app/upload/upload.service';
 
@@ -13,7 +12,7 @@ export class CapillaryMapper {
     return {
       id: capillary.id,
       value: capillary.value,
-      dateTimeCollect: formatDateTime(capillary.date_time_collect),
+      dateTimeCollect: capillary.date_time_collect,
       period: capillary.period,
       userId: capillary.user_id ? capillary.user_id : 1,
     };
@@ -40,7 +39,7 @@ export class CapillaryMapper {
         return {
           id: capillary.id,
           userId: capillary.user_id ? capillary.user_id : 1,
-          dateTimeCollect: capillary.date_time_collect.toISOString(),
+          dateTimeCollect: capillary.date_time_collect,
           period: capillary.period,
           value: capillary.value,
         };
@@ -60,18 +59,18 @@ export type CapillaryBloodGlucoseOutput = {
 export type PersistentDataTypeUserGlucose = {
   user_id: number;
   value: number;
-  date_time_collect: Date;
+  date_time_collect: string;
   period: string;
 };
 
-export const DataHourJoin = (date: string, hour: string): Date => {
+export const DataHourJoin = (date: string, hour: string): string => {
   const dateSplit = date.split('/');
   const yearSplit = dateSplit[2];
   const monthSplit = dateSplit[1];
   const daySplit = dateSplit[0];
 
   const isoString = `${yearSplit}-${monthSplit}-${daySplit}T${hour}:00.447Z`;
-  return new Date(isoString);
+  return isoString;
 };
 
 interface CapillaryBloodGlucoseResponse {
