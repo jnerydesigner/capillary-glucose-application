@@ -16,5 +16,6 @@ import { UsersRepository } from './repository/users-prisma.repository';
       inject: [PrismaService],
     },
   ],
+  exports: [UsersService],
 })
 export class UsersModule {}

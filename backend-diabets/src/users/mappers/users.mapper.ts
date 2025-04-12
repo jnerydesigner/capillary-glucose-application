@@ -1,4 +1,3 @@
-import { formatDateTime } from '@app/utils/format-date-time.utils';
 import { CapillaryBloodGlucose, User } from '@prisma/client';
 
 // Define all interfaces
@@ -44,14 +43,21 @@ export interface RawUserSimple extends Omit<User, 'password'> {
   id: number;
   email: string;
   name: string;
+  avatar: string;
 }
 
 export class UsersMapper {
-  static toUserResponse({ id, email, name }: RawUserSimple): RawUserSimple {
+  static toUserResponse({
+    id,
+    email,
+    name,
+    avatar,
+  }: RawUserSimple): RawUserSimple {
     return {
       id,
       email,
       name,
+      avatar,
     };
   }
   static toResponse(user: RawUser): OutputUserScreen {
@@ -59,7 +65,7 @@ export class UsersMapper {
       (capillary: CapillaryBloodGlucose) => ({
         capillaryId: capillary.id,
         value: capillary.value,
-        dateTimeCollect: formatDateTime(capillary.date_time_collect),
+        dateTimeCollect: capillary.date_time_collect,
         period: capillary.period,
       }),
     );

@@ -22,7 +22,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Link } from "react-router";
 
 const FormSchema = z.object({
   dateInitial: z.date({
@@ -56,7 +55,7 @@ export function DatePickerForm({ onSubmit }: DatePickerFormProps) {
   }
 
   return (
-    <>
+    <div className="w-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -148,14 +147,10 @@ export function DatePickerForm({ onSubmit }: DatePickerFormProps) {
             <Button type="submit" className="cursor-pointer">
               Filtrar Data
             </Button>
-
-            <Button type="submit" className="cursor-pointer">
-              <Link to="/create-glucose">Cria Apontamento da Glicose</Link>
-            </Button>
           </div>
         </form>
-        <Toaster />
       </Form>
-    </>
+      <Toaster />
+    </div>
   );
 }

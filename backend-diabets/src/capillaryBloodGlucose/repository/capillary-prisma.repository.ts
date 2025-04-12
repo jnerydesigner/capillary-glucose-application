@@ -9,6 +9,7 @@ import {
 import { Logger, NotFoundException } from '@nestjs/common';
 import { GlucoseResponse } from '@app/upload/upload.service';
 import { getPeriod } from '@app/utils/format-period.utils';
+import { formatTmz, formatTmzString } from '@app/utils/format-date-time.utils';
 
 export class CapillaryPrismaImplements implements CapillaryInterface {
   private logger: Logger;
@@ -18,14 +19,39 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
 
   async create(capillary: CreateCapillaryDTO): Promise<any> {
     const periodFormated = getPeriod();
-    await this.prisma.capillaryBloodGlucose.deleteMany({
+    this.logger.log(capillary);
+    this.logger.log(periodFormated);
+    const today = new Date();
+    const startOfDay = formatTmz(new Date(today.setHours(0, 0, 0, 0)));
+
+    this.logger.log('Start Date ' + startOfDay);
+    const endOfDay = formatTmz(new Date(today.setHours(23, 59, 59, 999)));
+    this.logger.log('End Date ' + endOfDay);
+
+    const existing = await this.prisma.capillaryBloodGlucose.findFirst({
       where: {
+        user_id: capillary.userId,
         period: periodFormated,
+        date_time_collect: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
       },
     });
+
+    this.logger.log(existing);
+
+    if (existing) {
+      return this.prisma.capillaryBloodGlucose.update({
+        where: { id: existing.id },
+        data: {
+          value: capillary.value,
+        },
+      });
+    }
     const createCapillary = await this.prisma.capillaryBloodGlucose.create({
       data: {
-        date_time_collect: new Date(),
+        date_time_collect: formatTmz(new Date()),
         value: capillary.value,
         user_id: capillary.userId,
         period: periodFormated,
@@ -87,29 +113,45 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     dateInitial: string,
     dateFinal: string,
   ): Promise<UserResponse> {
-    const userResponse = await this.prisma.user.findFirst({
-      where: {
-        id,
-      },
+    this.logger.log(formatTmzString(dateInitial));
+    this.logger.log(formatTmzString(dateFinal));
+    const userRaw: any[] = await this.prisma.$queryRaw`
+    SELECT 
+      us.id as user_id,
+      us.name,
+      us.email,
+      cbg.id,
+      cbg.value,
+      cbg.date_time_collect,
+      cbg.period,
+      cbg.user_id as cbg_user_id
+    FROM users us
+    LEFT JOIN capillary_blood_glucose cbg ON cbg.user_id = us.id
+    WHERE us.id = ${id}
+    AND cbg.date_time_collect BETWEEN ${dateInitial} AND ${dateFinal}
+    ORDER BY cbg.date_time_collect DESC;
+  `;
+    const transformRaw = this.transformToUserWithGlucose(userRaw);
 
-      include: {
-        capillary_blood_glucose: {
-          where: {
-            date_time_collect: {
-              gte: new Date(dateInitial),
-              lte: new Date(dateFinal),
-            },
-          },
-          orderBy: {
-            date_time_collect: 'desc',
-          },
-        },
-      },
-    });
+    this.logger.log(transformRaw);
+    return transformRaw;
+  }
 
-    if (!userResponse) {
-      throw new NotFoundException();
-    }
-    return CapillaryMapper.toResponseNewCollect(userResponse);
+  transformToUserWithGlucose(data: any[]): UserResponse {
+    const { user_id, name, email } = data[0];
+    const capillaryBloodGlucose = data.map((item) => ({
+      id: item.id,
+      userId: item.user_id,
+      dateTimeCollect: item.date_time_collect,
+      period: item.period,
+      value: item.value,
+    }));
+
+    return {
+      id: user_id,
+      name,
+      email,
+      capillaryBloodGlucose,
+    };
   }
 }

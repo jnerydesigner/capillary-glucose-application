@@ -1,17 +1,21 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateCapillaryDTO } from './dto/create.dto';
 import { CapillaryInterface } from './interfaces/capillary.interface';
-import * as path from 'node:path';
+
 import * as fs from 'node:fs';
 import { GlucoseResponse } from '@app/upload/upload.service';
 import { getPeriod } from '@app/utils/format-period.utils';
+import path from 'node:path';
 
 @Injectable()
 export class CapillaryBloodGlucoseService {
+  private logger: Logger;
   constructor(
     @Inject('CAPILLARY_REPOSITORY')
     private readonly capillaryRepository: CapillaryInterface,
-  ) {}
+  ) {
+    this.logger = new Logger(CapillaryBloodGlucoseService.name);
+  }
   create(input: CreateCapillaryDTO) {
     const periodFormated = getPeriod();
 
@@ -59,10 +63,15 @@ export class CapillaryBloodGlucoseService {
   }
 
   async findCapillary(userId: number, dateInitial: string, dateFinal: string) {
-    return this.capillaryRepository.findCapillary(
+    this.logger.log(dateInitial + ' : ' + dateFinal);
+    const response = await this.capillaryRepository.findCapillary(
       userId,
       dateInitial,
       dateFinal,
     );
+
+    this.logger.log(response);
+
+    return response;
   }
 }

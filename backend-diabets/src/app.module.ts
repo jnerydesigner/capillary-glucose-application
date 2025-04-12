@@ -9,6 +9,9 @@ import { UploadController } from './upload/upload.controller';
 import { UploadService } from './upload/upload.service';
 import { UploadModule } from './upload/upload.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 @Module({
   imports: [
@@ -22,8 +25,16 @@ import { MulterModule } from '@nestjs/platform-express';
     }),
     UsersModule,
     UploadModule,
+    AuthModule,
   ],
   controllers: [AppController, UploadController],
-  providers: [AppService, UploadService],
+  providers: [
+    AppService,
+    UploadService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
+  ],
 })
 export class AppModule {}

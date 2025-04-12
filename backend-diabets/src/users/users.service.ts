@@ -17,6 +17,10 @@ export class UsersService {
     return UsersMapper.toResponse(user);
   }
 
+  async findOneLogin(email: string) {
+    return await this.usersRepository.findOneEmailLogin(email);
+  }
+
   async createUser(user: CreateUserDto) {
     const findUser = await this.usersRepository.findOneEmail(user.email);
 

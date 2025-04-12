@@ -1,16 +1,13 @@
 "use client";
 
 import { fetchCapillary } from "@/api";
-import { DatePickerForm } from "@/components/date-picker-form"; // Certifique-se de que o caminho está correto
+import { AppointmentGlucose } from "@/components/appointment-glucose";
+import { GlucoseChart } from "@/components/chart-medition";
+import { DatePickerForm } from "@/components/date-picker-form";
+import { TableCapillary } from "@/components/table-capillary";
 import { useQuery } from "@tanstack/react-query";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getFilteredRowModel,
-  ColumnDef,
-  flexRender,
-} from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 type ValueWithClass = {
   value: number | null;
@@ -26,38 +23,6 @@ export type GlucoseRead = {
   "18:00": ValueWithClass;
   "22:00": ValueWithClass;
 };
-
-export const columns: ColumnDef<GlucoseRead>[] = [
-  {
-    accessorKey: "data",
-    header: "Data",
-    enableColumnFilter: true,
-  },
-  {
-    accessorKey: "06:00",
-    header: "06:00",
-  },
-  {
-    accessorKey: "08:00",
-    header: "08:00",
-  },
-  {
-    accessorKey: "11:00",
-    header: "11:00",
-  },
-  {
-    accessorKey: "13:00",
-    header: "13:00",
-  },
-  {
-    accessorKey: "18:00",
-    header: "18:00",
-  },
-  {
-    accessorKey: "22:00",
-    header: "22:00",
-  },
-];
 
 interface ReturnedDataGlucose {
   id: number;
@@ -111,56 +76,85 @@ const transformGlucoseData = (
 const initialValueDate = () => {
   const today = new Date();
 
+  const dateInitial = new Date(today);
+  dateInitial.setDate(today.getDate() - 15);
+  dateInitial.setUTCHours(0, 0, 0, 0);
+  const dateInitialISO = dateInitial.toISOString();
+
+  const dateFinal = new Date(today);
+  dateFinal.setUTCHours(23, 59, 59, 999);
+  const dateFinalISO = dateFinal.toISOString();
+
   return {
-    dateInitial: new Date(new Date().setDate(today.getDate() - 15)),
-    dateFinal: new Date(),
+    dateInitial: dateInitialISO,
+    dateFinal: dateFinalISO,
   };
 };
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifiedToken = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+      }
+
+      return;
+    };
+    verifiedToken();
+  }, [navigate]);
+
   const [formData, setFormData] = useState<{
-    dateInitial: Date;
-    dateFinal: Date;
-  } | null>(initialValueDate); // Armazena as datas do formulário
-  const [queryEnabled, setQueryEnabled] = useState(true); // Controla quando a query é habilitada
+    dateInitial: string;
+    dateFinal: string;
+  } | null>(initialValueDate);
+  const [queryEnabled, setQueryEnabled] = useState(true);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["capillary", formData],
-    queryFn: () =>
-      fetchCapillary({
-        dateInitial: formData?.dateInitial.toISOString()
-          ? formData?.dateInitial.toISOString()
-          : new Date().toISOString(),
-        dateFinal: formData?.dateFinal.toISOString()
-          ? formData?.dateFinal.toISOString()
-          : new Date().toISOString(),
-      }),
-    enabled: queryEnabled,
+    queryKey: ["capillary", formData?.dateInitial, formData?.dateFinal],
+    queryFn: () => {
+      const today = new Date();
+      const response = fetchCapillary({
+        dateInitial: formData?.dateInitial
+          ? formData?.dateInitial
+          : new Date(new Date().setDate(today.getDate() - 15)).toISOString(),
+        dateFinal: formData?.dateFinal
+          ? formData?.dateFinal
+          : new Date().toDateString(),
+      });
+
+      return response;
+    },
+    enabled: !!formData && queryEnabled,
   });
 
   const transformedData: GlucoseRead[] = data
     ? transformGlucoseData(data.capillaryBloodGlucose)
     : [];
 
-  const [filter, setFilter] = useState("");
-
-  const table = useReactTable<GlucoseRead>({
-    data: transformedData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter: filter,
-    },
-    onGlobalFilterChange: setFilter,
-  });
-
   const handleFormSubmit = (data: { dateInitial: Date; dateFinal: Date }) => {
-    setFormData(data);
+    const dateInitial = new Date(data.dateInitial);
+    const dateFinal = new Date(data.dateFinal);
+
+    dateInitial.setUTCHours(0, 0, 0, 0);
+    const dateInitialISO = dateInitial.toISOString();
+
+    dateFinal.setUTCHours(23, 59, 59, 999);
+    const dateFinalISO = dateFinal.toISOString();
+
+    setFormData({
+      dateInitial: dateInitialISO,
+      dateFinal: dateFinalISO,
+    });
     setQueryEnabled(true);
+
+    console.log("dateInitialISO:", dateInitialISO);
+    console.log("dateFinalISO:", dateFinalISO);
   };
 
-  if (isLoading && queryEnabled) {
+  if (isLoading) {
     return (
       <main className="min-h-screen bg-gray-100 p-6">
         <div className="container mx-auto max-w-7xl">
@@ -176,78 +170,16 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
-      <div className="container mx-auto max-w-7xl">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
-          Leituras de Glicose
-        </h1>
-
-        <div className="mb-4">
-          <DatePickerForm onSubmit={handleFormSubmit} />
-        </div>
-
-        {transformedData.length > 0 ? (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="px-6 py-3 text-center text-[1rem] font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="hover:bg-gray-50">
-                    {row.getVisibleCells().map((cell) => {
-                      const cellValue = cell.getValue() as
-                        | { value: number | null; className: string }
-                        | string;
-
-                      const isCustomValue =
-                        typeof cellValue === "object" &&
-                        cellValue !== null &&
-                        "value" in cellValue;
-
-                      return (
-                        <td
-                          key={cell.id}
-                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center"
-                        >
-                          {isCustomValue ? (
-                            <span className={cellValue.className}>
-                              {cellValue.value ?? "-"}
-                            </span>
-                          ) : (
-                            <span>{cellValue ?? "-"}</span>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center text-gray-500">
-            Nenhuma leitura disponível. Selecione um intervalo de datas para
-            buscar.
-          </div>
-        )}
+    <>
+      <div className="mb-4 flex justify-center items-center flex-row gap-2.5">
+        <AppointmentGlucose />
+        <DatePickerForm onSubmit={handleFormSubmit} />
       </div>
-    </main>
+      <div className="w-full mb-4 flex justify-center items-center flex-col gap-2.5">
+        <GlucoseChart chartData={transformedData} />
+
+        <TableCapillary dataTable={transformedData} />
+      </div>
+    </>
   );
 }
