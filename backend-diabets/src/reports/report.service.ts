@@ -1,4 +1,5 @@
-import { transformedGlucose } from '@app/utils/transformed-data';
+import { FormatDateBR } from '@app/utils/format-date-time.utils';
+import { transformGlucoseAscending } from '@app/utils/transformed-data';
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import PdfPrinter from 'pdfmake';
@@ -45,22 +46,20 @@ export class ReportService {
       });
     }
 
-    this.logger.log(titles);
-
     return titles;
   }
 
-  generateReport(data: any) {
-    const glucoseRead = transformedGlucose(data.capillaryBloodGlucose);
+  generateReport(data: any, datePeriodFormated: string) {
+    console.log(datePeriodFormated);
+    const glucoseRead = transformGlucoseAscending(data.capillaryBloodGlucose);
 
-    this.logger.log(glucoseRead);
     const titles = this.generateTitlesHeaderTable();
     const tableBody = [titles];
 
     glucoseRead.forEach((entry) => {
       const row = [
         {
-          text: entry.data,
+          text: FormatDateBR(entry.date),
           alignment: 'center',
           color: '#000',
           bold: false,
@@ -89,7 +88,7 @@ export class ReportService {
         {
           style: 'headerName',
           table: {
-            widths: [70, '*'],
+            widths: [110, '*'],
             body: [
               [
                 {
@@ -98,6 +97,24 @@ export class ReportService {
                 },
                 {
                   text: data.name,
+                  border: [false, false, false, false],
+                },
+              ],
+            ],
+          },
+        },
+        {
+          style: 'headerName',
+          table: {
+            widths: [110, '*'],
+            body: [
+              [
+                {
+                  text: 'Periodo da medição:',
+                  border: [false, false, false, false],
+                },
+                {
+                  text: datePeriodFormated,
                   border: [false, false, false, false],
                 },
               ],

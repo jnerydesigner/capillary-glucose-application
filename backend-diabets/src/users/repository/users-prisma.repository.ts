@@ -32,8 +32,6 @@ export class UsersRepository implements UsersRepositoryInterface {
       },
     });
 
-    this.logger.log(JSON.stringify(findEmail));
-
     if (findEmail) {
       return false;
     }

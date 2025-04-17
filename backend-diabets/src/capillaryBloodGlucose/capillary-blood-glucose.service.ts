@@ -7,6 +7,7 @@ import { GlucoseResponse } from '@app/upload/upload.service';
 import { getPeriod } from '@app/utils/format-period.utils';
 import path from 'node:path';
 import { ReportService } from '@app/reports/report.service';
+import { DatePeriodFormated } from '@app/utils/format-date-time.utils';
 
 @Injectable()
 export class CapillaryBloodGlucoseService {
@@ -72,8 +73,6 @@ export class CapillaryBloodGlucoseService {
       dateFinal,
     );
 
-    this.logger.log(response);
-
     return response;
   }
 
@@ -83,7 +82,9 @@ export class CapillaryBloodGlucoseService {
       dateInitial,
       dateFinal,
     );
-    this.reportService.generateReport(response);
+    const datePeriodFormated = DatePeriodFormated(dateInitial, dateFinal);
+
+    this.reportService.generateReport(response, datePeriodFormated);
     return null;
   }
 }
