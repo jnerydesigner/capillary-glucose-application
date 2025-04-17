@@ -159,7 +159,10 @@ export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
     <Card className="w-full h-[400px] min-h-[500px]">
       <CardHeader>
         <CardTitle>Glicose Capilar por Dia</CardTitle>
-        <CardDescription>Últimos 7 registros</CardDescription>
+        <CardDescription className="flex items-center gap-2 text-sm">
+          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          Média: {averageGlucose} mg/dL
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-[300px]">
@@ -169,14 +172,13 @@ export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
               dataKey="data"
               tickFormatter={(value) => {
                 const [day, month] = value.split("/");
-                return `${day}/${month}`; // Exibe DD/MM
+                return `${day}/${month}`;
               }}
             />
             <Tooltip
               cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
               content={<ChartTooltipContent />}
             />
-            {/* Linha de referência para a média geral */}
             {averageGlucose > 0 && (
               <ReferenceLine
                 y={averageGlucose}
@@ -190,138 +192,28 @@ export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
                 }}
               />
             )}
-            <Bar
-              dataKey="06:00"
-              radius={4}
-              fill={chartConfig["06:00"].color}
-              fillOpacity={1}
-            >
-              <LabelList
-                dataKey="06:00"
-                position="center"
-                className="font-bold"
-                fill="#fff"
-              />
-              {orderedChartRowData.map((entry, index) => (
-                <Cell
-                  key={`cell-06:00-${index}`}
-                  fill={getBarFillColor(
-                    entry["06:00"],
-                    chartConfig["06:00"].color
-                  )}
+            {(Object.keys(chartConfig) as TimeSlot[]).map((slot) => (
+              <Bar
+                key={slot}
+                dataKey={slot}
+                radius={4}
+                fill={chartConfig[slot].color}
+                fillOpacity={1}
+              >
+                <LabelList
+                  dataKey={slot}
+                  position="center"
+                  className="font-bold"
+                  fill="#fff"
                 />
-              ))}
-            </Bar>
-            <Bar
-              dataKey="08:00"
-              radius={4}
-              fill={chartConfig["08:00"].color}
-              fillOpacity={1}
-            >
-              <LabelList
-                dataKey="08:00"
-                position="center"
-                className="font-bold"
-                fill="#fff"
-              />
-              {orderedChartRowData.map((entry, index) => (
-                <Cell
-                  key={`cell-08:00-${index}`}
-                  fill={getBarFillColor(
-                    entry["08:00"],
-                    chartConfig["08:00"].color
-                  )}
-                />
-              ))}
-            </Bar>
-            <Bar
-              dataKey="11:00"
-              radius={4}
-              fill={chartConfig["11:00"].color}
-              fillOpacity={1}
-            >
-              <LabelList
-                dataKey="11:00"
-                position="center"
-                className="font-bold"
-                fill="#fff"
-              />
-              {orderedChartRowData.map((entry, index) => (
-                <Cell
-                  key={`cell-11:00-${index}`}
-                  fill={getBarFillColor(
-                    entry["11:00"],
-                    chartConfig["11:00"].color
-                  )}
-                />
-              ))}
-            </Bar>
-            <Bar
-              dataKey="13:00"
-              radius={4}
-              fill={chartConfig["13:00"].color}
-              fillOpacity={1}
-            >
-              <LabelList
-                dataKey="13:00"
-                position="center"
-                className="font-bold"
-                fill="#fff"
-              />
-              {orderedChartRowData.map((entry, index) => (
-                <Cell
-                  key={`cell-13:00-${index}`}
-                  fill={getBarFillColor(
-                    entry["13:00"],
-                    chartConfig["13:00"].color
-                  )}
-                />
-              ))}
-            </Bar>
-            <Bar
-              dataKey="18:00"
-              radius={4}
-              fill={chartConfig["18:00"].color}
-              fillOpacity={1}
-            >
-              <LabelList
-                dataKey="18:00"
-                position="center"
-                className="font-bold"
-                fill="#fff"
-              />
-              {orderedChartRowData.map((entry, index) => (
-                <Cell
-                  key={`cell-18:00-${index}`}
-                  fill={getBarFillColor(
-                    entry["18:00"],
-                    chartConfig["18:00"].color
-                  )}
-                />
-              ))}
-            </Bar>
-            <Bar
-              dataKey="22:00"
-              radius={4}
-              fill={chartConfig["22:00"].color}
-              fillOpacity={1}
-            >
-              <LabelList
-                dataKey="22:00"
-                position="center"
-                className="font-bold"
-                fill="#fff"
-              />
-              {orderedChartRowData.map((entry, index) => (
-                <Cell
-                  key={`cell-22:00-${index}`}
-                  fill={getBarFillColor(
-                    entry["22:00"],
-                    chartConfig["22:00"].color
-                  )}
-                />
-              ))}
-            </Bar>
+                {orderedChartRowData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${slot}-${index}`}
+                    fill={getBarFillColor(entry[slot], chartConfig[slot].color)}
+                  />
+                ))}
+              </Bar>
+            ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
