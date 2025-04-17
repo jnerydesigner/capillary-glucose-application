@@ -1,3 +1,4 @@
+import { ReportsModule } from './reports/reports.module';
 import { DatabaseModule } from './database/database.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -10,11 +11,10 @@ import { UploadService } from './upload/upload.service';
 import { UploadModule } from './upload/upload.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth/guards/auth.guard';
 
 @Module({
   imports: [
+    ReportsModule,
     CapillaryBloodGlucoseModule,
     DatabaseModule,
     ConfigModule.forRoot({

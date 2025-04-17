@@ -3,6 +3,7 @@ import { CapillaryBloodGlucoseController } from './capillary-blood-glucose.contr
 import { Module } from '@nestjs/common';
 import { PrismaService } from '@app/database/prisma.service';
 import { CapillaryPrismaImplements } from './repository/capillary-prisma.repository';
+import { ReportService } from '@app/reports/report.service';
 
 @Module({
   imports: [],
@@ -16,6 +17,7 @@ import { CapillaryPrismaImplements } from './repository/capillary-prisma.reposit
       },
       inject: [PrismaService],
     },
+    ReportService,
   ],
 })
 export class CapillaryBloodGlucoseModule {}

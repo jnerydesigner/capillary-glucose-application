@@ -133,7 +133,6 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
   `;
     const transformRaw = this.transformToUserWithGlucose(userRaw);
 
-    this.logger.log(transformRaw);
     return transformRaw;
   }
 

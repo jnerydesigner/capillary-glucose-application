@@ -6,6 +6,7 @@ import * as fs from 'node:fs';
 import { GlucoseResponse } from '@app/upload/upload.service';
 import { getPeriod } from '@app/utils/format-period.utils';
 import path from 'node:path';
+import { ReportService } from '@app/reports/report.service';
 
 @Injectable()
 export class CapillaryBloodGlucoseService {
@@ -13,6 +14,7 @@ export class CapillaryBloodGlucoseService {
   constructor(
     @Inject('CAPILLARY_REPOSITORY')
     private readonly capillaryRepository: CapillaryInterface,
+    private readonly reportService: ReportService,
   ) {
     this.logger = new Logger(CapillaryBloodGlucoseService.name);
   }
@@ -73,5 +75,15 @@ export class CapillaryBloodGlucoseService {
     this.logger.log(response);
 
     return response;
+  }
+
+  async generateReport(userId: number, dateInitial: string, dateFinal: string) {
+    const response = await this.capillaryRepository.findCapillary(
+      userId,
+      dateInitial,
+      dateFinal,
+    );
+    this.reportService.generateReport(response);
+    return null;
   }
 }
