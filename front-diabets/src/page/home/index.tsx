@@ -113,7 +113,7 @@ export default function Home() {
   } | null>(initialValueDate);
   const [queryEnabled, setQueryEnabled] = useState(true);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: ["capillary", formData?.dateInitial, formData?.dateFinal],
     queryFn: () => {
       const today = new Date();
@@ -130,6 +130,10 @@ export default function Home() {
     },
     enabled: !!formData && queryEnabled,
   });
+
+  if (isError) {
+    console.log(error);
+  }
 
   const transformedData: GlucoseRead[] = data
     ? transformGlucoseData(data.capillaryBloodGlucose)

@@ -1,17 +1,23 @@
 // src/components/Navbar.tsx
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 const menuItems = [
   { name: "Home", href: "/" },
-  { name: "Sobre Nós", href: "/sobre" },
-  { name: "Shop", href: "/shop" },
-  { name: "Receita Saudável", href: "/receitas" },
-  { name: "Contato", href: "/contato" },
+  { name: "Sobre Nós", href: "/blog/about" },
+  { name: "Shop", href: "/blog/shop" },
+  { name: "Receita Saudável", href: "/blog/eating-healthy" },
+  { name: "Contato", href: "/blog/contact" },
 ];
 
 export const NavbarBlog = () => {
-  const [active, setActive] = useState("/");
+  const location = useLocation();
+  const [active, setActive] = useState(location.pathname);
+
+  useEffect(() => {
+    setActive(location.pathname);
+  }, [location.pathname]);
 
   return (
     <nav>

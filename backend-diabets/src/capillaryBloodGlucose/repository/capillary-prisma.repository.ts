@@ -107,6 +107,7 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     dateInitial: string,
     dateFinal: string,
   ): Promise<UserResponse> {
+    console.log(id);
     const userRaw: any[] = await this.prisma.$queryRaw`
     SELECT 
       us.id as user_id,
@@ -123,13 +124,21 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     AND cbg.date_time_collect BETWEEN ${dateInitial} AND ${dateFinal}
     ORDER BY cbg.date_time_collect DESC;
   `;
+
+    console.log(userRaw);
+
     const transformRaw = this.transformToUserWithGlucose(userRaw);
 
     return transformRaw;
   }
 
   transformToUserWithGlucose(data: any[]): UserResponse {
+    if (data.length === 0) {
+      throw new NotFoundException('User not Found');
+    }
     const { user_id, name, email } = data[0];
+    this.logger.log(user_id);
+
     const capillaryBloodGlucose = data.map((item) => ({
       id: item.id,
       userId: item.user_id,

@@ -1,6 +1,29 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+.recipe-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.recipe-container h3 {
+  font-size: 3rem;
+  color: #333;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.recipe-container ol,
+.recipe-container ul {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.recipe-container li {
+  margin-bottom: 8px;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -15,6 +38,7 @@
 @theme {
   --color-header-white: #FFFFFF;
   --color-soft-pink: #FCECEC;
+  --color-food-blog: #f1c40f;
 }
 
 :root {

@@ -1,5 +1,7 @@
 import { dataManaus } from "@/utils/dayjs";
 import { ApiAxios } from "./api-config";
+import axios from "axios";
+import { ResponseTypeArticles, ResponseTypeHealthy } from "@/types-dto";
 
 export const fetchCapillary = async ({
   dateInitial,
@@ -23,19 +25,23 @@ export const fetchCapillary = async ({
     )}&dateFinal=${encodeURIComponent(dateFinal)}`
   );
 
+  console.log(response);
+
   if (!response.ok) {
-    throw new Error("Erro ao buscar as marcações");
+    throw new Error(
+      `Error: Status -> ${response.status} Message -> ${response.statusText}`
+    );
   }
 
   return response.json();
 };
 
-type OutputTokenProfile = {
-  sub: number;
-  username: string;
-  iat: number;
-  exp: number;
-};
+// type OutputTokenProfile = {
+//   sub: number;
+//   username: string;
+//   iat: number;
+//   exp: number;
+// };
 
 export const fetchCreateGlucose = async (value: number) => {
   const create: InputGlucose = {
@@ -60,6 +66,67 @@ export const fetchLogin = async (username: string, password: string) => {
   };
 
   const response = await ApiAxios.post<ResponseLogin>("/auth/login", body);
+
+  return response.data;
+};
+
+export const fetchArticles = async (pagination: string) => {
+  const response = await axios.get<ResponseTypeArticles>(
+    `${
+      import.meta.env.VITE_STRAPI_API_URL
+    }/api/articles?sort=publishedAt:desc&populate=*&${pagination}`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_STRAPI_BEARER_TOKEN}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
+
+  return response.data;
+};
+
+export const fetchHealthyRecipes = async (pagination: string) => {
+  let paginate = "";
+  if (pagination !== "") {
+    paginate = `&${pagination}`;
+  }
+  const response = await axios.get<ResponseTypeHealthy>(
+    `${
+      import.meta.env.VITE_STRAPI_API_URL
+    }/api/healthy-recipies?sort=publishedAt:desc&populate=*${paginate}`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_STRAPI_BEARER_TOKEN}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
+
+  return response.data;
+};
+
+export const fetchHealthyRecipesSlug = async (slug: string) => {
+  const response = await axios.get<ResponseTypeHealthy>(
+    `${
+      import.meta.env.VITE_STRAPI_API_URL
+    }/api/healthy-recipies?sort=publishedAt:desc&populate=*&filters[slug][$eq]=${slug}`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_STRAPI_BEARER_TOKEN}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
 
   return response.data;
 };
