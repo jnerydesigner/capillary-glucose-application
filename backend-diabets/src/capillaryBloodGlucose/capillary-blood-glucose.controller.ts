@@ -42,7 +42,7 @@ export class CapillaryBloodGlucoseController {
     @Query('dateFinal') dateFinal: string,
   ) {
     console.log(dateInitial, dateFinal);
-    return this.capillaryBloodGlucoseService.findCapillary(
+    return this.capillaryBloodGlucoseService.generateReport(
       parseInt(userid),
       dateInitial,
       dateFinal,

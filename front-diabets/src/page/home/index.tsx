@@ -4,6 +4,7 @@ import { fetchCapillary } from "@/api";
 import { AppointmentGlucose } from "@/components/appointment-glucose";
 import { GlucoseChart } from "@/components/chart-medition";
 import { DatePickerForm } from "@/components/date-picker-form";
+import { ModalGenerateReport } from "@/components/modal-generate-report";
 import { TableCapillary } from "@/components/table-capillary";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -112,7 +113,7 @@ export default function Home() {
   } | null>(initialValueDate);
   const [queryEnabled, setQueryEnabled] = useState(true);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: ["capillary", formData?.dateInitial, formData?.dateFinal],
     queryFn: () => {
       const today = new Date();
@@ -129,6 +130,10 @@ export default function Home() {
     },
     enabled: !!formData && queryEnabled,
   });
+
+  if (isError) {
+    console.log(error);
+  }
 
   const transformedData: GlucoseRead[] = data
     ? transformGlucoseData(data.capillaryBloodGlucose)
@@ -173,6 +178,7 @@ export default function Home() {
     <>
       <div className="mb-4 flex justify-center items-center flex-row gap-2.5">
         <AppointmentGlucose />
+        <ModalGenerateReport />
         <DatePickerForm onSubmit={handleFormSubmit} />
       </div>
       <div className="w-full mb-4 flex justify-center items-center flex-col gap-2.5">

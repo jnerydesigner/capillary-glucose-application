@@ -9,7 +9,7 @@ import {
 import { Logger, NotFoundException } from '@nestjs/common';
 import { GlucoseResponse } from '@app/upload/upload.service';
 import { getPeriod } from '@app/utils/format-period.utils';
-import { formatTmz, formatTmzString } from '@app/utils/format-date-time.utils';
+import { formatTmz } from '@app/utils/format-date-time.utils';
 
 export class CapillaryPrismaImplements implements CapillaryInterface {
   private logger: Logger;
@@ -19,14 +19,10 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
 
   async create(capillary: CreateCapillaryDTO): Promise<any> {
     const periodFormated = getPeriod();
-    this.logger.log(capillary);
-    this.logger.log(periodFormated);
     const today = new Date();
     const startOfDay = formatTmz(new Date(today.setHours(0, 0, 0, 0)));
 
-    this.logger.log('Start Date ' + startOfDay);
     const endOfDay = formatTmz(new Date(today.setHours(23, 59, 59, 999)));
-    this.logger.log('End Date ' + endOfDay);
 
     const existing = await this.prisma.capillaryBloodGlucose.findFirst({
       where: {
@@ -38,8 +34,6 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
         },
       },
     });
-
-    this.logger.log(existing);
 
     if (existing) {
       return this.prisma.capillaryBloodGlucose.update({
@@ -113,8 +107,7 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     dateInitial: string,
     dateFinal: string,
   ): Promise<UserResponse> {
-    this.logger.log(formatTmzString(dateInitial));
-    this.logger.log(formatTmzString(dateFinal));
+    console.log(id);
     const userRaw: any[] = await this.prisma.$queryRaw`
     SELECT 
       us.id as user_id,
@@ -131,14 +124,21 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     AND cbg.date_time_collect BETWEEN ${dateInitial} AND ${dateFinal}
     ORDER BY cbg.date_time_collect DESC;
   `;
+
+    console.log(userRaw);
+
     const transformRaw = this.transformToUserWithGlucose(userRaw);
 
-    this.logger.log(transformRaw);
     return transformRaw;
   }
 
   transformToUserWithGlucose(data: any[]): UserResponse {
+    if (data.length === 0) {
+      throw new NotFoundException('User not Found');
+    }
     const { user_id, name, email } = data[0];
+    this.logger.log(user_id);
+
     const capillaryBloodGlucose = data.map((item) => ({
       id: item.id,
       userId: item.user_id,

@@ -13,9 +13,10 @@ import {
   Bar,
   XAxis,
   CartesianGrid,
-  ResponsiveContainer,
   Tooltip,
   LabelList,
+  ReferenceLine,
+  Cell,
 } from "recharts";
 import { GlucoseRead } from "@/page/home";
 import { mapToChartData } from "@/utils/mapped-rich-chart";
@@ -51,77 +52,169 @@ type TableProps = {
   chartData: GlucoseRead[];
 };
 
-export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
-  console.log("Vindo do chart", chartDataProps);
-  const chartRowData = mapToChartData(chartDataProps);
+type TimeSlot = "06:00" | "08:00" | "11:00" | "13:00" | "18:00" | "22:00";
 
-  console.log(chartRowData);
+type ChartData = {
+  data: string;
+  "06:00": number | null;
+  "08:00": number | null;
+  "11:00": number | null;
+  "13:00": number | null;
+  "18:00": number | null;
+  "22:00": number | null;
+};
+
+export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
+  if (!chartDataProps || chartDataProps.length === 0) {
+    return (
+      <Card className="w-full h-[400px] min-h-[400px]">
+        <CardHeader>
+          <CardTitle>Glicose Capilar por Dia</CardTitle>
+          <CardDescription>Sem registros disponíveis</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  const sortedChartData = [...chartDataProps].sort((a, b) => {
+    const dateA = new Date(a.data.split("/").reverse().join("-"));
+    const dateB = new Date(b.data.split("/").reverse().join("-"));
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  const limitedChartData = sortedChartData.slice(0, 7);
+
+  const calculateAverage = (data: GlucoseRead[]) => {
+    const timeSlots: TimeSlot[] = [
+      "06:00",
+      "08:00",
+      "11:00",
+      "13:00",
+      "18:00",
+      "22:00",
+    ];
+    let totalSum = 0;
+    let totalCount = 0;
+
+    data.forEach((item) => {
+      timeSlots.forEach((slot) => {
+        const value = item[slot]?.value;
+        if (value !== null && value !== undefined) {
+          totalSum += value;
+          totalCount += 1;
+        }
+      });
+    });
+
+    return totalCount > 0 ? Math.round(totalSum / totalCount) : 0;
+  };
+
+  const averageGlucose = calculateAverage(limitedChartData);
+
+  const calculateAverageByTime = (data: GlucoseRead[]) => {
+    const timeSlots: TimeSlot[] = [
+      "06:00",
+      "08:00",
+      "11:00",
+      "13:00",
+      "18:00",
+      "22:00",
+    ];
+    const averages: { [key in TimeSlot]?: number } = {};
+
+    timeSlots.forEach((slot) => {
+      let sum = 0;
+      let count = 0;
+      data.forEach((item) => {
+        const value = item[slot]?.value;
+        if (value !== null && value !== undefined) {
+          sum += value;
+          count += 1;
+        }
+      });
+      averages[slot] = count > 0 ? Math.round(sum / count) : 0;
+    });
+
+    return averages;
+  };
+
+  const averagesByTime = calculateAverageByTime(limitedChartData);
+
+  const getBarFillColor = (value: number | null, defaultColor: string) => {
+    if (value !== null && value >= 180) {
+      return "rgba(231, 76, 60, 1.0)";
+    }
+    return defaultColor;
+  };
+
+  const chartRowData: ChartData[] = mapToChartData(limitedChartData);
+
+  const orderedChartRowData = [...chartRowData].sort((a, b) => {
+    const dateA = new Date(a.data.split("/").reverse().join("-"));
+    const dateB = new Date(b.data.split("/").reverse().join("-"));
+    return dateB.getTime() - dateA.getTime();
+  });
+
   return (
-    <Card className="w-full h-[400px] min-h-[400px]">
+    <Card className="w-full h-[400px] min-h-[500px]">
       <CardHeader>
         <CardTitle>Glicose Capilar por Dia</CardTitle>
-        <CardDescription>Últimos registros</CardDescription>
+        <CardDescription className="flex items-center gap-2 text-sm">
+          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          Média: {averageGlucose} mg/dL
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartRowData}>
-              <CartesianGrid strokeDasharray="2 2" />
-              <XAxis dataKey="data" />
-              <Tooltip
-                cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
-                content={<ChartTooltipContent />}
+          <BarChart width={1230} height={300} data={orderedChartRowData}>
+            <CartesianGrid strokeDasharray="2 2" />
+            <XAxis
+              dataKey="data"
+              tickFormatter={(value) => {
+                const [day, month] = value.split("/");
+                return `${day}/${month}`;
+              }}
+            />
+            <Tooltip
+              cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
+              content={<ChartTooltipContent />}
+            />
+            {averageGlucose > 0 && (
+              <ReferenceLine
+                y={averageGlucose}
+                stroke="red"
+                strokeDasharray="3 3"
+                label={{
+                  value: `Média: ${averageGlucose} mg/dL`,
+                  position: "insideTopRight",
+                  fill: "red",
+                  fontSize: 12,
+                }}
               />
-              <Bar dataKey="06:00" fill={chartConfig["06:00"].color} radius={4}>
+            )}
+            {(Object.keys(chartConfig) as TimeSlot[]).map((slot) => (
+              <Bar
+                key={slot}
+                dataKey={slot}
+                radius={4}
+                fill={chartConfig[slot].color}
+                fillOpacity={1}
+              >
                 <LabelList
-                  dataKey="06:00"
+                  dataKey={slot}
                   position="center"
                   className="font-bold"
                   fill="#fff"
                 />
+                {orderedChartRowData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${slot}-${index}`}
+                    fill={getBarFillColor(entry[slot], chartConfig[slot].color)}
+                  />
+                ))}
               </Bar>
-              <Bar dataKey="08:00" fill={chartConfig["08:00"].color} radius={4}>
-                <LabelList
-                  dataKey="08:00"
-                  position="center"
-                  className="font-bold"
-                  fill="#fff"
-                />
-              </Bar>
-              <Bar dataKey="11:00" fill={chartConfig["11:00"].color} radius={4}>
-                <LabelList
-                  dataKey="11:00"
-                  position="center"
-                  className="font-bold"
-                  fill="#fff"
-                />
-              </Bar>
-              <Bar dataKey="13:00" fill={chartConfig["13:00"].color} radius={4}>
-                <LabelList
-                  dataKey="13:00"
-                  position="center"
-                  className="font-bold"
-                  fill="#fff"
-                />
-              </Bar>
-              <Bar dataKey="18:00" fill={chartConfig["18:00"].color} radius={4}>
-                <LabelList
-                  dataKey="18:00"
-                  position="center"
-                  className="font-bold"
-                  fill="#fff"
-                />
-              </Bar>
-              <Bar dataKey="22:00" fill={chartConfig["22:00"].color} radius={4}>
-                <LabelList
-                  dataKey="22:00"
-                  position="center"
-                  className="font-bold"
-                  fill="#fff"
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+            ))}
+          </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
@@ -129,7 +222,16 @@ export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
           Média semanal em alta <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Comparando horários de medição (06:00 vs 08:00)
+          {averageGlucose > 0
+            ? `Média das últimas 7 leituras: ${averageGlucose} mg/dL`
+            : "Nenhum dado disponível para calcular a média"}
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Médias por horário:{" "}
+          {Object.entries(averagesByTime)
+            .filter(([_, avg]) => avg > 0)
+            .map(([slot, avg]) => `${slot}: ${avg} mg/dL`)
+            .join(", ")}
         </div>
       </CardFooter>
     </Card>
