@@ -1,90 +1,66 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { RichTextContent } from "@/types/rich-text";
 import { ReactNode } from "react";
 import { FaArrowRight } from "react-icons/fa";
 
-type RichTextProps = {
+export type RichTextContent = RichTextNode[];
+
+export interface RichTextNode {
+  type: "text" | "heading" | "paragraph" | "list" | "list-item";
+  text?: string;
+  bold?: boolean;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  format?: "ordered" | "unordered";
+  children?: RichTextNode[];
+}
+
+interface RichTextProps {
   content: RichTextContent;
-};
+}
+
+type HeadingTagType = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 export function RichTextRenderer({ content }: RichTextProps) {
-  const renderNode = (node: any, index: number): ReactNode => {
+  const renderNode = (node: RichTextNode, index: number): ReactNode => {
     if (node.type === "text") {
       if (node.bold) {
         return (
-          <p key={index} className="font-bold">
+          <strong key={index} className="font-bold">
             {node.text}
-          </p>
+          </strong>
         );
       }
       return node.text;
     }
 
     if (node.type === "heading" && node.level) {
-      switch (node.level) {
-        case 1:
-          return (
-            <h1 key={index} className="text-[2.6rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h1>
-          );
-        case 2:
-          return (
-            <h2 key={index} className="text-[2.4rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h2>
-          );
-        case 3:
-          return (
-            <h3 key={index} className="text-[2.2rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h3>
-          );
-        case 4:
-          return (
-            <h4 key={index} className="text-[1.8rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h4>
-          );
-        case 5:
-          return (
-            <h5 key={index} className="text-[1.6rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h5>
-          );
-        case 6:
-          return (
-            <h6 key={index} className="text-[1.4rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h6>
-          );
-        default:
-          return (
-            <h3 key={index} className="text-[2.2rem]">
-              {node.children.map((child: any, i: number) =>
-                renderNode(child, i)
-              )}
-            </h3>
-          );
-      }
+      const headingMap: Record<number, HeadingTagType> = {
+        1: "h1",
+        2: "h2",
+        3: "h3",
+        4: "h4",
+        5: "h5",
+        6: "h6",
+      };
+      const HeadingTag: HeadingTagType = headingMap[node.level] || "h3";
+      const fontSizes: Record<HeadingTagType, string> = {
+        h1: "text-[1.8rem] md:text-[2.6rem]",
+        h2: "text-[1.6rem] md:text-[2.4rem]",
+        h3: "text-[1.4rem] md:text-[2.2rem]",
+        h4: "text-[1.2rem] md:text-[1.8rem]",
+        h5: "text-[1.0rem] md:text-[1.6rem]",
+        h6: "text-[0.8rem] md:text-[1.4rem]",
+      };
+
+      return (
+        <HeadingTag key={index} className={fontSizes[HeadingTag]}>
+          {node.children?.map((child, i) => renderNode(child, i))}
+        </HeadingTag>
+      );
     }
 
     if (node.type === "paragraph") {
       return (
         <p key={index} className="my-4">
-          {node.children.map((child: any, i: number) => renderNode(child, i))}
+          {node.children?.map((child, i) => renderNode(child, i))}
         </p>
       );
     }
@@ -92,11 +68,8 @@ export function RichTextRenderer({ content }: RichTextProps) {
     if (node.type === "list") {
       const ListTag = node.format === "ordered" ? "ol" : "ul";
       return (
-        <ListTag
-          key={index}
-          className="ml-8 my-4 list-none" // Removida a seta e ajustado o estilo
-        >
-          {node.children.map((child: any, i: number) => renderNode(child, i))}
+        <ListTag key={index} className="ml-8 my-4 list-none">
+          {node.children?.map((child, i) => renderNode(child, i))}
         </ListTag>
       );
     }
@@ -105,9 +78,7 @@ export function RichTextRenderer({ content }: RichTextProps) {
       return (
         <li key={index} className="flex items-center my-2">
           <FaArrowRight className="mr-2 text-green-500" />
-          <span>
-            {node.children.map((child: any, i: number) => renderNode(child, i))}
-          </span>
+          <span>{node.children?.map((child, i) => renderNode(child, i))}</span>
         </li>
       );
     }

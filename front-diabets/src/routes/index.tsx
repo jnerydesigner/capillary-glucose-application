@@ -9,7 +9,7 @@ import About from "@/page/blog/about";
 import Contact from "@/page/blog/contact";
 import EatingHealthy from "@/page/blog/eating-healthy";
 import Shop from "@/page/blog/shop";
-import FoodArticle from "@/page/blog/food";
+import { FoodArticle } from "@/page/blog/food";
 
 export const RouterApp = () => {
   return (

@@ -1,5 +1,5 @@
 import { ResponseTypeArticles } from "@/types-dto";
-import { calculateReadingTime } from "@/utils/calculate-read-times";
+// import { calculateReadingTime } from "@/utils/calculate-read-times";
 import { dateFormatBlogType } from "@/utils/date-format-blog-type";
 import { FaRegHeart } from "react-icons/fa";
 
@@ -122,7 +122,7 @@ export const HeroBlog = ({ articles }: Articles) => {
           <div className="flex gap-4 text-sm mt-2 text-gray-300">
             <span>👤 {articles.data[0].author.name}</span>
             <span>📅 {dateFormatBlogType(articles.data[0].publishedAt)}</span>
-            <span>⏱ {calculateReadingTime(articles.data[0].content)}</span>
+            {/* <span>⏱ {calculateReadingTime(articles.data[0].content)}</span> */}
           </div>
         </div>
       </div>
@@ -150,7 +150,7 @@ export const HeroBlog = ({ articles }: Articles) => {
                       {notice.title}
                     </p>
                     <span className="text-xs text-gray-300 mt-1">
-                      📅 {calculateReadingTime(notice.content)}
+                      {/* 📅 {calculateReadingTime(notice.content)} */}
                     </span>
                   </div>
                 </div>

@@ -69,6 +69,17 @@ export interface Author {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  avatar_url: string;
+  social_media: SocialMedia;
+  specialty_title: string;
+}
+export interface SocialMedia {
+  social: Social[];
+}
+
+export interface Social {
+  name: string;
+  url: string;
 }
 
 export interface Category {
@@ -150,17 +161,21 @@ export interface Thumbnail {
 }
 
 export interface Content {
-  type: string;
-  level?: number;
-  children: Children[];
-  format?: string;
+  type: "text" | "heading" | "paragraph" | "list" | "list-item";
+  text?: string;
+  bold?: boolean;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  format?: "ordered" | "unordered";
+  children?: Children[];
 }
 
 export interface Children {
-  bold?: boolean;
+  type: "text" | "heading" | "paragraph" | "list" | "list-item";
   text?: string;
-  type: string;
-  children?: Children2[];
+  bold?: boolean;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  format?: "ordered" | "unordered";
+  children?: Children[];
 }
 
 export interface Children2 {

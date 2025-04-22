@@ -124,6 +124,8 @@ export const fetchHealthyRecipesSlug = async (slug: string) => {
     }
   );
 
+  console.log(response.data);
+
   if (response.status !== 200) {
     throw new Error("Not valid");
   }

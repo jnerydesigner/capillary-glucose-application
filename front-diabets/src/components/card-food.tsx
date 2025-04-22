@@ -10,9 +10,10 @@ interface CardProps {
 
 export const CardFood = ({ recipes }: CardProps) => {
   console.log(recipes);
+
   return (
     <Link to={`/blog/food/${recipes.slug}`}>
-      <div className="h-[400px] flex justify-between items-center flex-col border rounded-[8px] shadow">
+      <div className="w-[350px] h-[400px] flex justify-between items-center gap-2 flex-col border rounded-[8px] shadow">
         <div className="w-full h-[180px] rounded-t-[8px]">
           <img
             src={`${import.meta.env.VITE_STRAPI_API_URL}${recipes.cover.url}`}
@@ -20,12 +21,14 @@ export const CardFood = ({ recipes }: CardProps) => {
             className="w-full h-full object-cover rounded-t-[8px]"
           />
         </div>
-        <div className="w-full flex justify-center items-center flex-col p-4">
-          <StarRating rating={recipes.stars} />
-          <h2 className="w-full text-left my-2">{recipes.title}</h2>
+        <div className="w-full h-[210px] flex justify-center items-center flex-col px-2">
+          <div className="w-full h-12 flex justify-center items-center">
+            <StarRating rating={recipes.stars} />
+          </div>
+          <h2 className="w-full text-left my-2 h-12">{recipes.title}</h2>
 
           <div className="w-full flex justify-center items-center">
-            <div className="w-[120px] flex justify-start items-center gap-2 py-4">
+            <div className="w-[120px] h-14 flex justify-start items-center gap-2 py-4">
               <Avatar>
                 <AvatarImage src="https://github.com/jnerydesigner.png" />
                 <AvatarFallback>JN</AvatarFallback>

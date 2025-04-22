@@ -8,18 +8,22 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { RouterApp } from "./routes";
 import { AuthProvider } from "./context/auth-context";
+import { BlogFoodProvider } from "./context/blog-food";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <RouterApp />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </AuthProvider>
-      </BrowserRouter>
+      <BlogFoodProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <RouterApp />
+
+            <ReactQueryDevtools initialIsOpen={false} />
+          </AuthProvider>
+        </BrowserRouter>
+      </BlogFoodProvider>
     </QueryClientProvider>
   </StrictMode>
 );

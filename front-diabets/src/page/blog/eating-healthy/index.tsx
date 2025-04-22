@@ -21,8 +21,8 @@ export default function EatingHealthy() {
   }
   return (
     <div className="w-full flex justify-center items-center flex-col my-2">
-      <div className="h-[400px] w-full mt-4 grid grid-cols-2 gap-4 p-4">
-        <div className="flex justify-center items-center flex-col">
+      <div className="h-[400px] w-full mt-4 grid grid-rows-2 md:grid-cols-2 gap-4 p-4">
+        <div className="flex justify-center items-center flex-col order-2 md:order-1">
           <h2 className="text-[2rem]">
             Sua Jornada Diária da{" "}
             <span className="text-green-700 font-bold">
@@ -36,7 +36,7 @@ export default function EatingHealthy() {
             eum reiciendis ipsam maxime nesciunt dignissimos!
           </p>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center order-1 md:order-2">
           <div className="h-[400px] w-[400px]">
             <img
               src="/sanduiche.png"
@@ -46,7 +46,7 @@ export default function EatingHealthy() {
           </div>
         </div>
       </div>
-      <div className="w-full grid grid-cols-4 gap-2 my-3 p-4">
+      <div className="w-full flex justify-center items-center flex-col md:grid md:grid-cols-4 gap-2 my-3 p-4">
         {data.data &&
           data.data.map((recipes) => (
             <CardFood key={recipes.id} recipes={recipes} />
