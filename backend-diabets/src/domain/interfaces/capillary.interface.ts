@@ -1,5 +1,6 @@
+import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
 import { GlucoseResponse } from '@app/application/services/upload.service';
-import { CreateCapillaryDTO } from '../../application/dto/create.dto';
+
 import { UserResponse } from '@app/domain/mappers/capillary.mapper';
 
 export interface CapillaryInterface {
