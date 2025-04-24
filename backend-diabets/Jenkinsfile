@@ -17,5 +17,16 @@ pipeline {
                 }
             }
         }
+        stage('Push Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                        def imageName = "jandernery/blood-sweet-api:${env.BUILD_ID.replaceAll('[^a-zA-Z0-9_.-]', '_')}"
+                        def dockerImage = docker.image(imageName)
+                        dockerImage.push()
+                    }                    
+                }
+            }
+        }
     }
 }
