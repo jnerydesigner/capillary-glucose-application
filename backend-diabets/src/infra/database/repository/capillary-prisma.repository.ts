@@ -1,15 +1,15 @@
-import { CapillaryInterface } from '../interfaces/capillary.interface';
-import { CreateCapillaryDTO } from '../dto/create.dto';
 import { PrismaService } from '@app/infra/database/prisma.service';
 import {
   CapillaryBloodGlucoseOutput,
   CapillaryMapper,
   UserResponse,
-} from '../mapper/capillary.mapper';
+} from '../../../domain/mappers/capillary.mapper';
 import { Logger, NotFoundException } from '@nestjs/common';
-import { GlucoseResponse } from '@app/upload/upload.service';
-import { getPeriod } from '@app/utils/format-period.utils';
-import { formatTmz } from '@app/utils/format-date-time.utils';
+import { GlucoseResponse } from '@app/application/services/upload.service';
+import { getPeriod } from '@app/infra/utils/format-period.utils';
+import { formatTmz } from '@app/infra/utils/format-date-time.utils';
+import { CapillaryInterface } from '@app/domain/interfaces/capillary.interface';
+import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
 
 export class CapillaryPrismaImplements implements CapillaryInterface {
   private logger: Logger;

@@ -1,5 +1,5 @@
 import { CapillaryBloodGlucose, Prisma, User } from '@prisma/client';
-import { GlucoseMeasurement } from '@app/upload/upload.service';
+import { GlucoseMeasurement } from '@app/application/services/upload.service';
 
 type UserWithGlucose = Prisma.UserGetPayload<{
   include: { capillary_blood_glucose: true };

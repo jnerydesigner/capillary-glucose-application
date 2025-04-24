@@ -1,6 +1,6 @@
-import { GlucoseResponse } from '@app/upload/upload.service';
-import { CreateCapillaryDTO } from '../dto/create.dto';
-import { UserResponse } from '../mapper/capillary.mapper';
+import { GlucoseResponse } from '@app/application/services/upload.service';
+import { CreateCapillaryDTO } from '../../application/dto/create.dto';
+import { UserResponse } from '@app/domain/mappers/capillary.mapper';
 
 export interface CapillaryInterface {
   create(capillary: CreateCapillaryDTO): Promise<any>;

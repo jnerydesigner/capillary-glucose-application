@@ -5,7 +5,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { GlucoseRead, GlucoseResponse, UploadService } from './upload.service';
+
+import {
+  GlucoseRead,
+  GlucoseResponse,
+  UploadService,
+} from '@app/application/services/upload.service';
 
 @Controller('upload')
 export class UploadController {

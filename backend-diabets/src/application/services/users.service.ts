@@ -1,7 +1,7 @@
 import { CreateUserDto } from '@app/application/dto/create-user.dto';
 import { UsersRepositoryInterface } from '@app/domain/interfaces/users.interface';
 
-import { UsersMapper } from '@app/users/mappers/users.mapper';
+import { UsersMapper } from '@app/domain/mappers/users.mapper';
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 
 @Injectable()

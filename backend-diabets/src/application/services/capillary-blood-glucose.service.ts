@@ -1,13 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { CreateCapillaryDTO } from './dto/create.dto';
-import { CapillaryInterface } from './interfaces/capillary.interface';
 
 import * as fs from 'node:fs';
-import { GlucoseResponse } from '@app/upload/upload.service';
-import { getPeriod } from '@app/utils/format-period.utils';
+import { GlucoseResponse } from '@app/application/services/upload.service';
+import { getPeriod } from '@app/infra/utils/format-period.utils';
 import path from 'node:path';
-import { ReportService } from '@app/reports/report.service';
-import { DatePeriodFormated } from '@app/utils/format-date-time.utils';
+import { ReportService } from '@app/application/services/report.service';
+import { DatePeriodFormated } from '@app/infra/utils/format-date-time.utils';
+import { CapillaryInterface } from '@app/domain/interfaces/capillary.interface';
+import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
 
 @Injectable()
 export class CapillaryBloodGlucoseService {

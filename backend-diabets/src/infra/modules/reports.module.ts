@@ -1,5 +1,5 @@
+import { ReportService } from '@app/application/services/report.service';
 import { Module } from '@nestjs/common';
-import { ReportService } from './report.service';
 
 @Module({
   imports: [],

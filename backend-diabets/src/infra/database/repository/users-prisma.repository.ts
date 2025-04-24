@@ -5,7 +5,7 @@ import { CreateUserDto } from '../../../application/dto/create-user.dto';
 import {
   RawUserSimple,
   UsersMapper,
-} from '../../../users/mappers/users.mapper';
+} from '../../../domain/mappers/users.mapper';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UsersRepositoryInterface } from '@app/domain/interfaces/users.interface';

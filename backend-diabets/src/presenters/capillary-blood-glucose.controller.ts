@@ -1,6 +1,6 @@
+import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
+import { CapillaryBloodGlucoseService } from '@app/application/services/capillary-blood-glucose.service';
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { CapillaryBloodGlucoseService } from './capillary-blood-glucose.service';
-import { CreateCapillaryDTO } from './dto/create.dto';
 
 @Controller('capillary')
 export class CapillaryBloodGlucoseController {

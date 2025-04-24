@@ -1,3 +1,7 @@
+import { SignInDto } from '@app/application/dto/sign-in.dto';
+import { AuthService } from '@app/application/services/auth.service';
+import { Public } from '@app/infra/decorator/is_public.decorator';
+import { AuthGuard } from '@app/infra/guards/auth.guard';
 import {
   Body,
   Controller,
@@ -8,10 +12,6 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignInDto } from './dto/sign-in.dto';
-import { Public } from './decorator/is_public.decorator';
-import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {

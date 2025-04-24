@@ -7,9 +7,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 
 import { Request } from 'express';
-import { jwtConstants } from '../constants/constant';
-import { IS_PUBLIC_KEY } from '../decorator/is_public.decorator';
+
 import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '../decorator/is_public.decorator';
+import { jwtConstants } from '../constants/constant';
 
 interface CustomRequest extends Request {
   user: { id: string; email: string }; // Exemplo

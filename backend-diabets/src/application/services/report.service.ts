@@ -1,5 +1,5 @@
-import { FormatDateBR } from '@app/utils/format-date-time.utils';
-import { transformGlucoseAscending } from '@app/utils/transformed-data';
+import { FormatDateBR } from '@app/infra/utils/format-date-time.utils';
+import { transformGlucoseAscending } from '@app/infra/utils/transformed-data';
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import PdfPrinter from 'pdfmake';
