@@ -2,10 +2,12 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Navigate to the backend folder') {
             steps {
-                echo 'Building...'
-                // Aqui você pode adicionar comandos para construir seu projeto
+                script{
+                    sh 'cd backend-diabets'
+                    sh 'ls -la'
+                }
             }
         }
         stage('Test') {
