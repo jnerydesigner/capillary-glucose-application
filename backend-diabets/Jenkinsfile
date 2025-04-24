@@ -9,27 +9,29 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
                     def imageName = "jandernery/blood-sweet-api:${env.BUILD_ID.replaceAll('[^a-zA-Z0-9_.-]', '_')}"
                     def imageNameLatest = "jandernery/blood-sweet-api:latest"
+                    
                     docker.build(imageName, '/var/lib/jenkins/workspace/DiabetsApplication/backend-diabets')
                     docker.build(imageNameLatest, '/var/lib/jenkins/workspace/DiabetsApplication/backend-diabets')
                 }
             }
         }
+
         stage('Push Image') {
             steps {
                 script {
+                    def imageName = "jandernery/blood-sweet-api:${env.BUILD_ID.replaceAll('[^a-zA-Z0-9_.-]', '_')}"
+                    def imageLatest = "jandernery/blood-sweet-api:latest"
+                    
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        def imageName = "jandernery/blood-sweet-api:${env.BUILD_ID.replaceAll('[^a-zA-Z0-9_.-]', '_')}"
-                        def imageLatest = "jandernery/blood-sweet-api:latest"
-                        def dockerImage = docker.image(imageName)
-                        def dockerImageLatest =docker.image(imageLatest)
-                        dockerImage.push()
-                        dockerImageLatest.push()
-                    }                    
+                        docker.image(imageName).push()
+                        docker.image(imageLatest).push()
+                    }
                 }
             }
         }
