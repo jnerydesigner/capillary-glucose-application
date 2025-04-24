@@ -12,7 +12,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('jandernery/blood-sweet-api:${env.BUILD_ID}', '/var/lib/jenkins/workspace/DiabetsApplication/backend-diabets')
+                    def imageName = "jandernery/blood-sweet-api:${env.BUILD_ID.replaceAll('[^a-zA-Z0-9_.-]', '_')}"
+                    docker.build(imageName, '/var/lib/jenkins/workspace/DiabetsApplication/backend-diabets')
                 }
             }
         }
