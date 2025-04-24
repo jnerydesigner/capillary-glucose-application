@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                // Aqui você pode adicionar comandos para construir seu projeto
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                // Aqui você pode adicionar comandos para testar seu projeto
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Aqui você pode adicionar comandos para implantar seu projeto
+            }
+        }
+    }
+}
