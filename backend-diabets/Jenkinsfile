@@ -4,9 +4,8 @@ pipeline {
     stages {
         stage('Navigate to the backend folder') {
             steps {
-                script{
-                    sh 'cd /var/lib/jenkins/workspace/DiabetsApplication/backend-diabets'
-                    sh 'ls -la'
+                script {
+                    sh 'cd /var/lib/jenkins/workspace/DiabetsApplication/backend-diabets && ls -la'
                 }
             }
         }
