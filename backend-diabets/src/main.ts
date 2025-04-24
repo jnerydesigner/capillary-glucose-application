@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './infra/modules/app.module';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
