@@ -1,11 +1,14 @@
 import { Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@app/infra/database/prisma.service';
 
+import { CreateUserDto } from '../../../application/dto/create-user.dto';
+import {
+  RawUserSimple,
+  UsersMapper,
+} from '../../../users/mappers/users.mapper';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UsersRepositoryInterface } from '@app/domain/interfaces/users.interface';
-import { CreateUserDto } from '@app/application/dto/create-user.dto';
-import { RawUserSimple, UsersMapper } from '../mappers/users.mapper';
 
 export class UsersRepository implements UsersRepositoryInterface {
   private logger: Logger;

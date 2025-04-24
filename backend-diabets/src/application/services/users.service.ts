@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { CreateUserDto } from '@app/application/dto/create-user.dto';
+import { UsersRepositoryInterface } from '@app/domain/interfaces/users.interface';
+
+import { UsersMapper } from '@app/users/mappers/users.mapper';
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { UsersRepositoryInterface } from './interfaces/users.interface';
-import { UsersMapper } from './mappers/users.mapper';
-import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {

@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { RawUserSimple } from '../mappers/users.mapper';
+import { CreateUserDto } from '../../application/dto/create-user.dto';
+import { RawUserSimple } from '@app/users/mappers/users.mapper';
 
 export interface UsersRepositoryInterface {
   findOne(userId: number): Promise<any>;

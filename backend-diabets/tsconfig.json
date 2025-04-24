@@ -19,7 +19,11 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/*": ["src/*"]
+      "@app/*": ["src/*"],
+      "@presenters/*": ["src/presenters/*"],
+      "@application/*": ["src/application/*"],
+      "@infra/*": ["src/infra/*"],
+      "@domain/*": ["src/domain/*"]
     }
   }
 }

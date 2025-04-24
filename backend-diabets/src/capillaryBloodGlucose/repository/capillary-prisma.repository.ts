@@ -1,6 +1,6 @@
 import { CapillaryInterface } from '../interfaces/capillary.interface';
 import { CreateCapillaryDTO } from '../dto/create.dto';
-import { PrismaService } from '@app/database/prisma.service';
+import { PrismaService } from '@app/infra/database/prisma.service';
 import {
   CapillaryBloodGlucoseOutput,
   CapillaryMapper,
