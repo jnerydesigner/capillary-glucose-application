@@ -25,6 +25,7 @@ export class UploadController {
     }
 
     const csvData: GlucoseRead[] = await this.uploadService.processCsv(file);
+
     const glucoseData: GlucoseResponse =
       this.uploadService.transformToGlucoseResponse(csvData);
     await this.uploadService.saveJsonToFile(glucoseData, 'processed-data.json');

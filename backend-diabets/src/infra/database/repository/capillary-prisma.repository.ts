@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { PrismaService } from '@app/infra/database/prisma.service';
 import {
   CapillaryBloodGlucoseOutput,
@@ -73,10 +74,13 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
         id,
       },
     });
+    console.log(user);
 
     if (!user) {
       throw new NotFoundException();
     }
+
+    console.log('Data 0', data[0]);
 
     const dataResponse = data.glucose.map((gli) => {
       return CapillaryMapper.toPersistentJson(user, gli);
@@ -107,7 +111,6 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     dateInitial: string,
     dateFinal: string,
   ): Promise<UserResponse> {
-    console.log(id);
     const userRaw: any[] = await this.prisma.$queryRaw`
     SELECT 
       us.id as user_id,
@@ -125,7 +128,7 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     ORDER BY cbg.date_time_collect DESC;
   `;
 
-    console.log(userRaw);
+    console.log(userRaw[0]);
 
     const transformRaw = this.transformToUserWithGlucose(userRaw);
 
@@ -146,6 +149,19 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
       period: item.period,
       value: item.value,
     }));
+
+    Promise.all(
+      capillaryBloodGlucose.map((capillary) => {
+        this.prisma.capillaryBloodGlucose.create({
+          data: {
+            value: capillary.value,
+            period: capillary.period,
+            date_time_collect: capillary.dateTimeCollect,
+            user_id,
+          },
+        });
+      }),
+    );
 
     return {
       id: user_id,

@@ -3,8 +3,23 @@ import { EditorsChoiceSection } from "@/components/editor-choice-section";
 import { HeroBlog } from "@/components/hero-blog";
 import { MarketingGoogleAds } from "@/components/marketing-google-ads";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router";
 
 export default function HomeBlog() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
+    console.log(params);
+    console.log("Token", token);
+    if (token) {
+      localStorage.setItem("auth_token", token);
+      navigate("/", { replace: true });
+    }
+  }, [location, navigate]);
   const { data, isLoading } = useQuery({
     queryKey: ["articles"],
     queryFn: () => fetchArticles("pagination[limit]=5"),

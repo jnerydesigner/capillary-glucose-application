@@ -41,7 +41,7 @@ export class CapillaryBloodGlucoseService {
 
   async createGlucoseCsv(): Promise<GlucoseResponse> {
     const filename = 'processed-data.json';
-    const pathJson = path.join(__dirname, '..', '..', 'uploads', filename);
+    const pathJson = path.resolve('uploads', filename);
 
     return new Promise((resolve, reject) => {
       fs.readFile(pathJson, 'utf-8', (error, data) => {
@@ -82,6 +82,7 @@ export class CapillaryBloodGlucoseService {
       dateInitial,
       dateFinal,
     );
+    console.log(response[0]);
     const datePeriodFormated = DatePeriodFormated(dateInitial, dateFinal);
 
     this.reportService.generateReport(response, datePeriodFormated);

@@ -38,16 +38,21 @@ export const transformGlucoseAscending = (capillaryBloodGlucose) => {
   const groupedData = {};
 
   for (const record of capillaryBloodGlucose) {
-    const date = record.dateTimeCollect.split(' ')[0];
+    let dateTime = record.dateTimeCollect;
+    if (dateTime.includes('T')) {
+      dateTime = dateTime.split('T')[0];
+    } else if (dateTime.includes(' ')) {
+      dateTime = dateTime.split(' ')[0];
+    }
 
-    if (!groupedData[date]) {
-      groupedData[date] = {};
+    if (!groupedData[dateTime]) {
+      groupedData[dateTime] = {};
       fixedTimes.forEach((time) => {
-        groupedData[date][time] = null;
+        groupedData[dateTime][time] = null;
       });
     }
 
-    groupedData[date][record.period] = record.value;
+    groupedData[dateTime][record.period] = record.value;
   }
 
   return Object.entries(groupedData)
