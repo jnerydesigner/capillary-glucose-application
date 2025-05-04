@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { fetchLogin } from "@/api";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useContext } from "react";
 import { AuthContext } from "@/context/auth-context";
 import { toast } from "sonner";
@@ -79,6 +79,17 @@ export function LoginTestForm({
               <Button type="submit" className="w-full">
                 Login
               </Button>
+            </div>
+            <div className="w-full h-[50px] flex justify-center items-center mt-2">
+              <Link
+                to={`${import.meta.env.VITE_BACKEND_URL}/auth/google/login`}
+              >
+                <img
+                  src="/google-icon.svg"
+                  alt="Logo Google"
+                  className="w-[30px] h-[30px]"
+                />
+              </Link>
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">

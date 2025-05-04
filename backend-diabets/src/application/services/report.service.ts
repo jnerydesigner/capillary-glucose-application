@@ -2,6 +2,7 @@ import { FormatDateBR } from '@app/infra/utils/format-date-time.utils';
 import { transformGlucoseAscending } from '@app/infra/utils/transformed-data';
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
+import * as path from 'path';
 import PdfPrinter from 'pdfmake';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
@@ -50,10 +51,19 @@ export class ReportService {
   }
 
   generateReport(data: any, datePeriodFormated: string) {
-    console.log(datePeriodFormated);
+    const imagePathLogo = path.resolve(
+      'src',
+      'application',
+      'assets',
+      'sangue-doce-logo-redondo.png',
+    );
+
+    console.log(imagePathLogo);
+
     const glucoseRead = transformGlucoseAscending(data.capillaryBloodGlucose);
 
     const titles = this.generateTitlesHeaderTable();
+
     const tableBody = [titles];
 
     glucoseRead.forEach((entry) => {
@@ -67,12 +77,24 @@ export class ReportService {
         } as const,
       ];
       ['06:00', '08:00', '11:00', '13:00', '18:00', '22:00'].forEach((time) => {
+        const fontColor: any =
+          entry[time] !== null && Number(entry[time]) > 180
+            ? '#e74c3c'
+            : '#000';
+
+        const fillColor: any =
+          entry[time] !== null && Number(entry[time]) > 180
+            ? '#ffffff'
+            : '#ffffff';
+
+        const bold: any =
+          entry[time] !== null && Number(entry[time]) > 180 ? true : false;
         row.push({
-          text: entry[time] !== null ? entry[time].toString() : '',
+          text: entry[time] !== null ? entry[time].toString() : ' - ',
           alignment: 'center',
-          color: '#000',
-          bold: false,
-          fillColor: '#ffffff',
+          color: fontColor,
+          bold: bold,
+          fillColor: fillColor,
         } as const);
       });
       tableBody.push(row);
@@ -81,23 +103,33 @@ export class ReportService {
     const docDefinition: TDocumentDefinitions = {
       content: [
         {
+          image: imagePathLogo,
+          width: 70,
+          alignment: 'center',
+          margin: [0, 0, 0, 6],
+        },
+        {
           text: 'Medição de Glicose',
           style: 'header',
           alignment: 'center',
+          fontSize: 18,
+          bold: true,
+          margin: [0, 4, 0, 4],
         },
         {
           style: 'headerName',
           table: {
-            widths: [110, '*'],
+            widths: [130, '*'],
             body: [
               [
                 {
-                  text: 'Name:',
+                  text: 'Nome: ',
                   border: [false, false, false, false],
                 },
                 {
                   text: data.name,
                   border: [false, false, false, false],
+                  bold: true,
                 },
               ],
             ],
@@ -106,11 +138,11 @@ export class ReportService {
         {
           style: 'headerName',
           table: {
-            widths: [110, '*'],
+            widths: [130, '*'],
             body: [
               [
                 {
-                  text: 'Periodo da medição:',
+                  text: 'Período da medição: ',
                   border: [false, false, false, false],
                 },
                 {
@@ -122,7 +154,7 @@ export class ReportService {
           },
         },
         {
-          style: 'headerGlucoseTtitles',
+          style: 'headerGlucoseTitles',
           table: {
             widths: [100, 70, 70, 70, 70, 70, 70, 70],
             body: tableBody,
@@ -140,12 +172,12 @@ export class ReportService {
       defaultStyle: {
         font: 'Helvetica',
       },
-      pageMargins: [4, 4, 4, 4],
+      pageMargins: [5, 30, 5, 20],
       styles: {
         headerName: {
           margin: [0, 6, 0, 6],
         },
-        headerGlucoseTtitles: {
+        headerGlucoseTitles: {
           margin: [0, 6, 0, 6],
           fillColor: '#8e44ad',
         },

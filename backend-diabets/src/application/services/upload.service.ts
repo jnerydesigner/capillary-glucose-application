@@ -99,7 +99,7 @@ export class UploadService {
     data: GlucoseResponse,
     filename: string = 'output.json',
   ): Promise<void> {
-    const outputPath = path.join(__dirname, '..', '..', 'uploads', filename);
+    const outputPath = path.resolve('uploads', filename);
     return new Promise((resolve, reject) => {
       fs.writeFile(
         outputPath,
