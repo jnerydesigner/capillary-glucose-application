@@ -1,12 +1,13 @@
 import { FaHome } from "react-icons/fa";
-import { NavUser } from "./nav-user";
+// import { NavUser } from "./nav-user";
 import { Link } from "react-router";
+import { NavBarUserMenu } from "./nav-bar-user-menu";
 
-const user = {
-  name: "Jander da Costa Nery",
-  email: "jander.webamsetr@gmail.com",
-  avatar: "https://github.com/jnerydesigner.png",
-};
+// const user = {
+//   name: "Jander da Costa Nery",
+//   email: "jander.webmaster@gmail.com",
+//   avatar: "https://github.com/jnerydesigner.png",
+// };
 
 export const Header = () => {
   return (
@@ -15,8 +16,9 @@ export const Header = () => {
         <FaHome className="w-[30px] h-[30px]" />
       </Link>
       <h1 className="text-3xl font-bold text-gray-800">Leituras de Glicose</h1>
+      <NavBarUserMenu />
 
-      <NavUser user={user} />
+      {/* <NavUser user={user} /> */}
     </header>
   );
 };

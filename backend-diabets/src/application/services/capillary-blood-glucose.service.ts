@@ -8,6 +8,7 @@ import { ReportService } from '@app/application/services/report.service';
 import { DatePeriodFormated } from '@app/infra/utils/format-date-time.utils';
 import { CapillaryInterface } from '@app/domain/interfaces/capillary.interface';
 import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class CapillaryBloodGlucoseService {
@@ -76,7 +77,12 @@ export class CapillaryBloodGlucoseService {
     return response;
   }
 
-  async generateReport(userId: number, dateInitial: string, dateFinal: string) {
+  async generateReport(
+    userId: number,
+    dateInitial: string,
+    dateFinal: string,
+    res: Response,
+  ) {
     const response = await this.capillaryRepository.findCapillary(
       userId,
       dateInitial,
@@ -85,7 +91,7 @@ export class CapillaryBloodGlucoseService {
     console.log(response[0]);
     const datePeriodFormated = DatePeriodFormated(dateInitial, dateFinal);
 
-    this.reportService.generateReport(response, datePeriodFormated);
+    this.reportService.generateReport(response, datePeriodFormated, res);
     return null;
   }
 }

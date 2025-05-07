@@ -13,7 +13,7 @@ export const CardFood = ({ recipes }: CardProps) => {
 
   return (
     <Link to={`/blog/food/${recipes.slug}`}>
-      <div className="w-[350px] h-[400px] flex justify-between items-center gap-2 flex-col border rounded-[8px] shadow">
+      <div className="w-full h-[400px] flex justify-between items-center gap-2 flex-col border rounded-[8px] shadow">
         <div className="w-full h-[180px] rounded-t-[8px]">
           <img
             src={`${import.meta.env.VITE_STRAPI_API_URL}${recipes.cover.url}`}

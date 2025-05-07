@@ -78,7 +78,7 @@ const initialValueDate = () => {
   const today = new Date();
 
   const dateInitial = new Date(today);
-  dateInitial.setDate(today.getDate() - 15);
+  dateInitial.setDate(today.getDate() - 30);
   dateInitial.setUTCHours(0, 0, 0, 0);
   const dateInitialISO = dateInitial.toISOString();
 
@@ -176,7 +176,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="mb-4 flex justify-center items-center flex-row gap-2.5">
+      <div className="mb-4 flex justify-between items-center flex-row gap-2.5">
         <AppointmentGlucose />
         <ModalGenerateReport />
         <DatePickerForm onSubmit={handleFormSubmit} />

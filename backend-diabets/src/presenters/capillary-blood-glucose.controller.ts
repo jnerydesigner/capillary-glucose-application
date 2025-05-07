@@ -1,6 +1,7 @@
 import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
 import { CapillaryBloodGlucoseService } from '@app/application/services/capillary-blood-glucose.service';
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('capillary')
 export class CapillaryBloodGlucoseController {
@@ -27,7 +28,6 @@ export class CapillaryBloodGlucoseController {
     @Query('dateInitial') dateInitial: string,
     @Query('dateFinal') dateFinal: string,
   ) {
-    console.log(dateInitial, dateFinal);
     return this.capillaryBloodGlucoseService.findCapillary(
       parseInt(userid),
       dateInitial,
@@ -40,12 +40,14 @@ export class CapillaryBloodGlucoseController {
     @Param('userId') userid: string,
     @Query('dateInitial') dateInitial: string,
     @Query('dateFinal') dateFinal: string,
+    @Res() res: Response,
   ) {
     console.log(dateInitial, dateFinal);
     return this.capillaryBloodGlucoseService.generateReport(
       parseInt(userid),
       dateInitial,
       dateFinal,
+      res,
     );
   }
 }

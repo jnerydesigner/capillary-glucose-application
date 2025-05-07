@@ -1,10 +1,11 @@
 import { FormatDateBR } from '@app/infra/utils/format-date-time.utils';
 import { transformGlucoseAscending } from '@app/infra/utils/transformed-data';
 import { Injectable, Logger } from '@nestjs/common';
-import * as fs from 'fs';
+
 import * as path from 'path';
 import PdfPrinter from 'pdfmake';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { Response } from 'express';
 
 @Injectable()
 export class ReportService {
@@ -50,7 +51,7 @@ export class ReportService {
     return titles;
   }
 
-  generateReport(data: any, datePeriodFormated: string) {
+  generateReport(data: any, datePeriodFormated: string, res: Response) {
     const imagePathLogo = path.resolve(
       'src',
       'application',
@@ -102,12 +103,12 @@ export class ReportService {
 
     const docDefinition: TDocumentDefinitions = {
       content: [
-        {
-          image: imagePathLogo,
-          width: 70,
-          alignment: 'center',
-          margin: [0, 0, 0, 6],
-        },
+        // {
+        //   image: imagePathLogo,
+        //   width: 70,
+        //   alignment: 'center',
+        //   margin: [0, 0, 0, 6],
+        // },
         {
           text: 'Medição de Glicose',
           style: 'header',
@@ -185,16 +186,33 @@ export class ReportService {
     };
 
     const pdfDoc = this.printer.createPdfKitDocument(docDefinition);
-    const writeStream = fs.createWriteStream('output.pdf');
+    const chunks: Buffer[] = [];
+    pdfDoc.on('data', (chunk) => {
+      chunks.push(chunk); // Collect data chunks
+    });
 
-    pdfDoc.pipe(writeStream);
+    pdfDoc.on('end', () => {
+      const pdfBuffer = Buffer.concat(chunks); // Combine the chunks into a single buffer
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename="glicose-report.pdf"',
+      );
+      res.send(pdfBuffer); // Send the PDF as a response
+    });
+
     pdfDoc.end();
 
-    writeStream.on('finish', () => {
-      this.logger.log(
-        'PDF document created and saved as output.pdf successfully.',
-      );
-    });
+    // const writeStream = fs.createWriteStream('output.pdf');
+
+    // pdfDoc.pipe(writeStream);
+    // pdfDoc.end();
+
+    // writeStream.on('finish', () => {
+    //   this.logger.log(
+    //     'PDF document created and saved as output.pdf successfully.',
+    //   );
+    // });
   }
 }
 type TitleType = {
