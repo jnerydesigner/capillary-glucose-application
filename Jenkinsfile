@@ -48,7 +48,7 @@ pipeline {
                                 yarn build
 
                                 pm2 stop strapi-sangue-doce
-                                pm2 start ecosystem.config.cjs
+                                pm2 start "yarn start" --name strapi-sangue-doce
                             '
                         """
                     }
