@@ -1,0 +1,47 @@
+{
+  "name": "seligadev",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Strapi application",
+  "scripts": {
+    "build": "npx strapi build",
+    "console": "npx strapi console",
+    "deploy": "npx strapi deploy",
+    "dev": "npx strapi develop",
+    "develop": "strapi develop",
+    "seed:example": "node ./scripts/seed.js",
+    "start": "npx strapi start",
+    "strapi": "strapi",
+    "upgrade": "npx @strapi/upgrade latest",
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "deploy:dev": "npx strapi build && npx strapi start"
+  },
+  "dependencies": {
+    "@strapi/plugin-cloud": "5.12.3",
+    "@strapi/plugin-users-permissions": "5.12.3",
+    "@strapi/provider-email-nodemailer": "^5.12.5",
+    "@strapi/strapi": "5.12.3",
+    "fs-extra": "^10.0.0",
+    "mime-types": "^2.1.27",
+    "nodemailer": "^6.10.1",
+    "pg": "8.8.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "slugify": "^1.6.6",
+    "styled-components": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "d1202dcd-1b72-4164-90b8-2a07dccf2959"
+  }
+}

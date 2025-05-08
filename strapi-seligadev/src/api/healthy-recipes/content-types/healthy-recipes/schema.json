@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "healthy_recipies",
+  "info": {
+    "singularName": "healthy-recipes",
+    "pluralName": "healthy-recipies",
+    "displayName": "Healthy Recipes",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "text",
+      "required": true
+    },
+    "content": {
+      "type": "blocks",
+      "required": true
+    },
+    "stars": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "author": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::author.author"
+    },
+    "calories": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "category_healthy": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::category-healthy.category-healthy"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    }
+  }
+}
