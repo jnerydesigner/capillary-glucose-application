@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "category_healthies",
+  "info": {
+    "singularName": "category-healthy",
+    "pluralName": "category-healthies",
+    "displayName": "Category Healthy",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    }
+  }
+}
