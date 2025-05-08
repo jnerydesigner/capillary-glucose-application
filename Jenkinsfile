@@ -40,7 +40,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'SSH_PASSWORD', variable: 'SSH_PASSWORD')]) {
                         sh """
                             sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no root@deploy-server '
-                                export PATH=/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS_22/bin:$PATH
+                                export PATH=/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS_22/bin:\$PATH
 
                                 node -v
                                 yarn -v
@@ -49,10 +49,10 @@ pipeline {
 
                                 # Verificar se há alterações no código
                                 git fetch origin
-                                LOCAL=\$(git rev-parse HEAD)  # Escapando o $ para o Groovy não interferir
+                                LOCAL=\$(git rev-parse HEAD)
                                 REMOTE=\$(git rev-parse origin/main)
 
-                                if [ "\$LOCAL" != "\$REMOTE" ]; then
+                                if [ "\${LOCAL}" != "\${REMOTE}" ]; then
                                     echo "Alterações detectadas, rodando o deploy"
 
                                     yarn install
