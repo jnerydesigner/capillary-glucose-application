@@ -56,9 +56,7 @@ pipeline {
                                     yarn install
                                     yarn build
 
-                                    pm2 stop strapi-sangue-doce || true
-                                    pm2 delete strapi-sangue-doce || true
-                                    pm2 start "yarn start" --name strapi-sangue-doce
+                                    pm2 restart strapi-sangue-doce --watch --ignore-watch="node_modules"
                                 }
 
                                 echo "Sem alterações no código do Strapi, deploy não necessário"
