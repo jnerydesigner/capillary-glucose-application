@@ -49,7 +49,7 @@ pipeline {
 
                                 # Verificar se há alterações no código
                                 git fetch origin
-                                LOCAL=\$(git rev-parse HEAD)
+                                LOCAL=\$(git rev-parse HEAD)  # Escapando o $ para o Groovy não interferir
                                 REMOTE=\$(git rev-parse origin/main)
 
                                 if [ "\$LOCAL" != "\$REMOTE" ]; then
@@ -70,6 +70,7 @@ pipeline {
                 }
             }
         }
+
 
 
         stage('Deploy com PM2 do Next') {
