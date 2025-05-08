@@ -49,18 +49,30 @@ pipeline {
 
                                 cd /var/lib/jenkins/workspace/SangueDoce/strapi-seligadev
 
-                                yarn install
-                                yarn build
+                                # Verificar se há alterações no código
+                                git fetch origin
+                                LOCAL=\$(git rev-parse HEAD)
+                                REMOTE=\$(git rev-parse origin/main)
 
-                                pm2 stop strapi-sangue-doce
-                                pm2 delete strapi-sangue-doce
-                                pm2 start "yarn start" --name strapi-sangue-doce
+                                if [ "\$LOCAL" != "\$REMOTE" ]; then
+                                    echo "Alterações detectadas, rodando o deploy"
+
+                                    yarn install
+                                    yarn build
+
+                                    pm2 stop strapi-sangue-doce || true
+                                    pm2 delete strapi-sangue-doce || true
+                                    pm2 start "yarn start" --name strapi-sangue-doce
+                                else
+                                    echo "Sem alterações no código, deploy não necessário"
+                                fi
                             '
                         """
                     }
                 }
             }
         }
+
 
         stage('Deploy com PM2 do Next') {
             steps {
@@ -75,18 +87,30 @@ pipeline {
 
                                 cd /var/lib/jenkins/workspace/SangueDoce/front-sangue-doce
 
-                                yarn install
-                                yarn build
+                                # Verificar se há alterações no código
+                                git fetch origin
+                                LOCAL=$(git rev-parse HEAD)
+                                REMOTE=$(git rev-parse origin/main)
 
-                                pm2 stop front-sangue-doce
-                                pm2 delete front-sangue-doce
-                                pm2 start "yarn start" --name front-sangue-doce
+                                if [ "\$LOCAL" != "\$REMOTE" ]; then
+                                    echo "Alterações detectadas, rodando o deploy"
+
+                                    yarn install
+                                    yarn build
+
+                                    pm2 stop front-sangue-doce || true
+                                    pm2 delete front-sangue-doce || true
+                                    pm2 start "yarn start" --name front-sangue-doce
+                                else
+                                    echo "Sem alterações no código, deploy não necessário"
+                                fi
                             '
                         """
                     }
                 }
             }
         }
+
         stage('Send Mail Deploy Success') {
             steps {
                 emailext(attachLog: true,
