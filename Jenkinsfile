@@ -20,10 +20,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Faz o checkout do código do repositório Git
                     checkout scm
-                    
-                    // Obtém a mensagem do commit
+                
                     COMMIT_MESSAGE = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
                 }
             }
