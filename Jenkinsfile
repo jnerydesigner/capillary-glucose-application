@@ -88,9 +88,6 @@ pipeline {
                                 # Verificar se há alterações no código
                                 git fetch origin
 
-                                LOCAL=$(git rev-parse HEAD)
-                                REMOTE=$(git rev-parse origin/main)
-
                                 git diff --exit-code origin/main || {
                                     echo "Alterações detectadas, rodando o deploy"
 
