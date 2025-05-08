@@ -61,7 +61,7 @@ pipeline {
                                     pm2 start "yarn start" --name strapi-sangue-doce
                                 }
 
-                                echo "Sem alterações no código, deploy não necessário"
+                                echo "Sem alterações no código do Strapi, deploy não necessário"
                             '
                         """
                     }
@@ -87,10 +87,11 @@ pipeline {
 
                                 # Verificar se há alterações no código
                                 git fetch origin
+
                                 LOCAL=$(git rev-parse HEAD)
                                 REMOTE=$(git rev-parse origin/main)
 
-                                if [ "\$LOCAL" != "\$REMOTE" ]; then
+                                git diff --exit-code origin/main || {
                                     echo "Alterações detectadas, rodando o deploy"
 
                                     yarn install
@@ -99,9 +100,9 @@ pipeline {
                                     pm2 stop front-sangue-doce || true
                                     pm2 delete front-sangue-doce || true
                                     pm2 start "yarn start" --name front-sangue-doce
-                                else
-                                    echo "Sem alterações no código, deploy não necessário"
-                                fi
+                                }
+
+                                echo "Sem alterações no código do Next, deploy não necessário"
                             '
                         """
                     }
