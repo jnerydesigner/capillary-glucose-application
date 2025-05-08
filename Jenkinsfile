@@ -34,42 +34,42 @@ pipeline {
             }
         }
 
-        stage('Deploy com PM2 do Strapi') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'SSH_PASSWORD', variable: 'SSH_PASSWORD')]) {
-                        sh """
-                            sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no root@deploy-server '
-                                export PATH=/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS_22/bin:\$PATH
+stage('Deploy com PM2 do Strapi') {
+    steps {
+        script {
+            withCredentials([string(credentialsId: 'SSH_PASSWORD', variable: 'SSH_PASSWORD')]) {
+                sh """
+                    sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no root@deploy-server '
+                        export PATH=/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS_22/bin:\$PATH
 
-                                node -v
-                                yarn -v
+                        node -v
+                        yarn -v
 
-                                cd /var/lib/jenkins/workspace/SangueDoce/strapi-seligadev
+                        cd /var/lib/jenkins/workspace/SangueDoce/strapi-seligadev
 
-                                # Verificar se há alterações no código
-                                git fetch origin
-                                LOCAL=\$(git rev-parse HEAD)
-                                REMOTE=\$(git rev-parse origin/main)
+                        # Verificar se há alterações no código
+                        git fetch origin
+                        LOCAL=\$(git rev-parse HEAD)
+                        REMOTE=\$(git rev-parse origin/main)
 
-                                if [ "\${LOCAL}" != "\${REMOTE}" ]; then
-                                    echo "Alterações detectadas, rodando o deploy"
+                        if [ "\${LOCAL}" != "\${REMOTE}" ]; then
+                            echo "Alterações detectadas, rodando o deploy"
 
-                                    yarn install
-                                    yarn build
+                            yarn install
+                            yarn build
 
-                                    pm2 stop strapi-sangue-doce || true
-                                    pm2 delete strapi-sangue-doce || true
-                                    pm2 start "yarn start" --name strapi-sangue-doce
-                                else
-                                    echo "Sem alterações no código, deploy não necessário"
-                                fi
-                            '
-                        """
-                    }
-                }
+                            pm2 stop strapi-sangue-doce || true
+                            pm2 delete strapi-sangue-doce || true
+                            pm2 start "yarn start" --name strapi-sangue-doce
+                        else
+                            echo "Sem alterações no código, deploy não necessário"
+                        fi
+                    '
+                """
             }
         }
+    }
+}
 
 
 
