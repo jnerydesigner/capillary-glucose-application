@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "strapi-sangue-doce",
       script: "yarn",
-      args: "deploy:dev",
+      args: "start",
       instances: 1,
       autorestart: true,
       wait_ready: true,

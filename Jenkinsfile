@@ -47,8 +47,8 @@ pipeline {
                                 yarn install
                                 yarn build
 
-                                pm2 update strapi-sangue-doce || true
-                                pm2 start ecosystem.config.cjs --update-env || pm2 restart ecosystem.config.cjs
+                                pm2 stop strapi-sangue-doce
+                                pm2 start ecosystem.config.cjs
                             '
                         """
                     }
