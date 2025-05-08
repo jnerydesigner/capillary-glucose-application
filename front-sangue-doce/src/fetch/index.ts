@@ -54,3 +54,22 @@ export const fetchRecipesChoiceDay = async (calories: number) => {
   const data = await response.json();
   return data;
 };
+
+export const fetchSocialMediasBySlug = async <T>(slug: string): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/social-medias?sort=publishedAt:desc&populate=*&filters[slug]=${slug}`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+  return data;
+};

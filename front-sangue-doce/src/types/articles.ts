@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ResponseTypeArticles {
   data: ArticleType[];
   meta: Meta;
@@ -76,12 +75,13 @@ export interface Author {
   specialty_title: string;
 }
 export interface SocialMedia {
-  social: Social[];
+  social: SocialMediaType[];
 }
 
-export interface Social {
+export interface SocialMediaType {
   name: string;
   url: string;
+  slug: string;
 }
 
 export interface Category {

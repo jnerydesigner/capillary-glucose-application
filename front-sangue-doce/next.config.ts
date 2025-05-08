@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       new URL("http://localhost:1337/**"),
       new URL("http://191.101.78.119:8091/**"),
+      new URL("https://github.com/**"),
     ],
   },
   reactStrictMode: true,

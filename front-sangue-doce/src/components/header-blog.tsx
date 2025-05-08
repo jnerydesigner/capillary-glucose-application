@@ -15,6 +15,7 @@ export const HeaderBlog = () => {
           className="rounded-full"
           width={500}
           height={500}
+          priority
         />
       </div>
       <NavbarBlog />
