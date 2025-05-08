@@ -3,6 +3,11 @@ pipeline {
     tools {
         nodejs 'NodeJS_22'
     }
+    environment {
+        EMAIL_RECIPIENT = 'jander.webmaster@gmail.com'  
+        COMMIT_HASH = "${env.GIT_COMMIT}"
+        COMMIT_MESSAGE = ''
+    }
     stages {
         stage('Check Node Version') {
             steps {
@@ -80,6 +85,20 @@ pipeline {
                         """
                     }
                 }
+            }
+        }
+        stage('Send Mail Deploy Success') {
+            steps {
+                emailext(attachLog: true,
+                body: """
+                <h2>Build Finalizada - commit: ${COMMIT_MESSAGE} - ${COMMIT_HASH}</h2>
+                <p><b>Status:</b> ${currentBuild.currentResult}</p>
+                <p><b>Tempo de Execução:</b> ${currentBuild.durationString}</p>
+                """,
+                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                to: "${EMAIL_RECIPIENT}",
+                mimeType: 'text/html'
+                )
             }
         }
     }
