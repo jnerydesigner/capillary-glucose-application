@@ -48,6 +48,7 @@ pipeline {
                                 yarn build
 
                                 pm2 stop strapi-sangue-doce
+                                pm2 delete strapi-sangue-doce
                                 pm2 start "yarn start" --name strapi-sangue-doce
                             '
                         """
