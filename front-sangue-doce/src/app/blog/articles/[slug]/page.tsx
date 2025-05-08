@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { fetchArticleBySlug } from "@/fetch";
 import { RichTextRenderer } from "@/components/tich-text-rendering.tsx";
 import { ResponseTypeArticles } from "@/types/articles";
+import Image from "next/image";
 
 export default function Page() {
   const pathname = usePathname();
@@ -53,6 +54,16 @@ export default function Page() {
 
   return (
     <div className="p-10">
+      <div className="w-full h-[500px]">
+        <Image
+          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data[0].cover.url}`}
+          alt={article.data[0].title}
+          className="w-full h-full object-cover"
+          width={1000}
+          height={1000}
+          priority
+        />
+      </div>
       <h1 className="text-center text-3xl my-10 font-bold">
         {article.data[0].title}
       </h1>

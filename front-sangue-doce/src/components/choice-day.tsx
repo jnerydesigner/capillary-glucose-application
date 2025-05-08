@@ -60,7 +60,7 @@ export const ChoiceDay = () => {
       <div>
         <div className="w-50">
           <Image
-            src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${recipes.data[0].cover.url}`}
+            src="/alimentacao-saudavel-diversificada.png"
             alt={recipes.data[0].title}
             className="w-full h-full object-cover"
             width={500}

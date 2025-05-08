@@ -21,14 +21,16 @@ export const HeroBlog = ({ articles }: Articles) => {
               {articles.data[0].likes}
             </span>
           </div>
-          <Image
-            src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${articles.data[0].cover.url}`}
-            alt={articles.data[0].title}
-            className="w-full h-full object-cover"
-            width={1000}
-            height={1000}
-            priority
-          />
+          <div className="w-full h-[515px]">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${articles.data[0].cover.url}`}
+              alt={articles.data[0].title}
+              className="w-full h-full object-cover"
+              width={1000}
+              height={1000}
+              priority
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6 text-white flex flex-col justify-end">
             <span className="bg-red-500 text-white px-3 py-1 rounded text-xs w-fit mb-2">
               {articles.data[0].category.name}
@@ -53,13 +55,15 @@ export const HeroBlog = ({ articles }: Articles) => {
                   className="relative rounded-lg overflow-hidden shadow-sm"
                 >
                   <div>
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${notice.cover.url}`}
-                      alt={notice.title}
-                      className="w-full h-full object-cover"
-                      width={200}
-                      height={200}
-                    />
+                    <div className="w-full h-[250px]">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${notice.cover.url}`}
+                        alt={notice.title}
+                        className="w-full h-full object-cover"
+                        width={200}
+                        height={200}
+                      />
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent p-4 text-white flex flex-col justify-end">
                       <span className="bg-pink-500 text-white px-2 py-0.5 rounded text-xs w-fit mb-1">
                         {notice.category.name}
