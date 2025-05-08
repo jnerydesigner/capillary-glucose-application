@@ -2,7 +2,7 @@
 
 import { HeaderBlog } from "@/components/header-blog";
 import { HeroBlog } from "@/components/hero-blog";
-import { ChoiceDay } from "@/components/choice-day";
+
 import { fetchArticles } from "@/fetch";
 import { ResponseTypeArticles } from "@/types/articles";
 import { useEffect, useState } from "react";
@@ -59,7 +59,6 @@ export default function Home() {
       <HeaderBlog />
       <main className="relative min-h-screen overflow-hidden">
         <HeroBlog articles={articles} />
-        {/* <ChoiceDay /> */}
       </main>
     </>
   );
