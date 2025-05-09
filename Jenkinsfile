@@ -59,9 +59,10 @@ pipeline {
                                     pm2 delete strapi-sangue-doce
 
                                     pm2 start "yarn start" --name strapi-sangue-doce --watch
-                                } || {
-                                    echo "Sem alterações no código do Strapi, deploy não necessário"
                                 }
+
+                                echo "Sem alterações no código do Strapi, deploy não necessário"
+                                
 
                                 
                             '
@@ -99,9 +100,10 @@ pipeline {
                                     pm2 delete front-sangue-doce
 
                                     pm2 start "yarn start" --name front-sangue-doce --watch
-                                } || {
-                                    echo "Sem alterações no código do Next, deploy não necessário"
                                 }
+                                
+                                echo "Sem alterações no código do Next, deploy não necessário"
+                                
 
                                 
                             '
