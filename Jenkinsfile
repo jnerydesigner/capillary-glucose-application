@@ -89,13 +89,8 @@ pipeline {
                                 # Verificar se há alterações no código
                                 git fetch origin
 
-                                git diff --exit-code origin/main > diff_output.txt || {
+                                git diff --exit-code HEAD origin/main || {
                                     echo "Alterações detectadas, rodando o deploy"
-                                    
-                                    # Exibir o conteúdo do diff para diagnóstico
-                                    cat diff_output.txt
-                                    
-                                    # Execute o deploy
                                     yarn install
                                     yarn build
                                     pm2 delete front-sangue-doce
