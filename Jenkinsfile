@@ -25,6 +25,12 @@ pipeline {
                     COMMIT_MESSAGE = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
 
                     echo "$COMMIT_MESSAGE"
+
+                    git fetch origin
+
+                    git diff origin/main --exit-code || {
+                        echo "Existem alterações pendentes"
+                    }
                 }
             }
         }
