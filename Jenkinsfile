@@ -62,8 +62,9 @@ pipeline {
                                 yarn install
                                 yarn build
                                 
-                                pm2 update pm2-start.json
-                                pm2 start pm2-start.json || pm2 restart pm2-start.json                                 
+                                pm2 update strapi-sangue-doce
+
+                                pm2 start "yarn start" --name strapi-sangue-doce --watch  || pm2 restart "yarn start" --name strapi-sangue-doce --watch                                 
                             '
                         """
                     }
@@ -92,6 +93,11 @@ pipeline {
                                 yarn build
                                 pm2 update pm2-start.json
                                 pm2 start pm2-start.json || pm2 restart pm2-start.json
+
+
+                                 pm2 update front-sangue-doce
+                                
+                                pm2 start "yarn start" --name front-sangue-doce --watch  || pm2 restart "yarn start" --name front-sangue-doce --watch 
                             '
                         """
                     }
