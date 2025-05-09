@@ -21,16 +21,16 @@ pipeline {
             steps {
                 script {
                     checkout scm
-                
+
+                    // Pega a mensagem do commit atual
                     COMMIT_MESSAGE = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+                    echo "Última mensagem de commit: $COMMIT_MESSAGE"
 
-                    echo "$COMMIT_MESSAGE"
+                    // Faz o fetch para garantir que temos as últimas alterações
+                    sh "git fetch origin"
 
-                    git fetch origin
-
-                    git diff origin/main --exit-code || {
-                        echo "Existem alterações pendentes"
-                    }
+                    // Verifica se há diferenças entre o branch local e o remoto
+                    def diffResult = sh(script: "git diff origin/main --exit-code", returnStatus: true)
                 }
             }
         }
