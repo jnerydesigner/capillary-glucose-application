@@ -17,6 +17,11 @@
     },
     "content": {
       "type": "text"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::author.author"
     }
   }
 }
