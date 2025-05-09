@@ -31,6 +31,7 @@ export default function About() {
   }
   return (
     <section className="p-4">
+      <h1 className="title-general my-2">{about?.data.about}</h1>
       <p className="paragraph-general my-2 leading-[32px]">
         {about?.data.content}
       </p>

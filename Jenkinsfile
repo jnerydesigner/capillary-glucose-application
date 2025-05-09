@@ -33,7 +33,7 @@ pipeline {
                     // Verifica se há diferenças entre o branch local e o remoto
                     COMMIT_RESULT = sh(script: "git diff origin/main --exit-code", returnStatus: true)
 
-                    echo "$COMMIT_RESULT"
+                    echo "Resultado do Commit: $COMMIT_RESULT"
                 }
             }
         }
