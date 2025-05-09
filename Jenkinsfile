@@ -88,7 +88,7 @@ pipeline {
                                 # Verificar se há alterações no código
                                 git fetch origin
 
-                                git diff --exit-code origin/main || {
+                                git diff --exit-code origin/main{
                                     echo "Alterações detectadas, rodando o deploy"
 
                                     yarn install
@@ -97,10 +97,11 @@ pipeline {
                                     pm2 delete front-sangue-doce
 
                                     pm2 start "yarn start" --name front-sangue-doce --watch
-
+                                } || {
+                                    echo "Sem alterações no código do Next, deploy não necessário"
                                 }
 
-                                echo "Sem alterações no código do Next, deploy não necessário"
+                                
                             '
                         """
                     }
