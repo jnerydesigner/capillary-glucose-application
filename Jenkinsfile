@@ -89,6 +89,8 @@ pipeline {
                                 # Verificar se há alterações no código
                                 git fetch origin
 
+                                git diff --stat origin/main
+
                                 git diff --exit-code HEAD origin/main || {
                                     echo "Alterações detectadas, rodando o deploy"
                                     yarn install
