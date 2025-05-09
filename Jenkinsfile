@@ -7,6 +7,7 @@ pipeline {
         EMAIL_RECIPIENT = 'jander.webmaster@gmail.com'  
         COMMIT_HASH = "${env.GIT_COMMIT}"
         COMMIT_MESSAGE = ''
+        COMMIT_RESULT = false
     }
     stages {
         stage('Check Node Version') {
@@ -30,7 +31,9 @@ pipeline {
                     sh "git fetch origin"
 
                     // Verifica se há diferenças entre o branch local e o remoto
-                    def diffResult = sh(script: "git diff origin/main --exit-code", returnStatus: true)
+                    COMMIT_RESULT = sh(script: "git diff origin/main --exit-code", returnStatus: true)
+
+                    echo "$COMMIT_RESULT"
                 }
             }
         }
