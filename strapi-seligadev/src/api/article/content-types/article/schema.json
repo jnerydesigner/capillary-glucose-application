@@ -59,6 +59,10 @@
     },
     "contentNew": {
       "type": "blocks"
+    },
+    "clicks": {
+      "type": "biginteger",
+      "default": "0"
     }
   }
 }
