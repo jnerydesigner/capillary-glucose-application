@@ -63,6 +63,7 @@ pipeline {
                                 yarn build
                                 
                                 pm2 delete strapi-sangue-doce
+
                                 pm2 update
 
                                 pm2 start "yarn start" --name strapi-sangue-doce --watch
@@ -92,10 +93,9 @@ pipeline {
                                 echo "Alterações detectadas, rodando o deploy"
                                 yarn install
                                 yarn build
-                                pm2 update pm2-start.json
-                                pm2 start pm2-start.json || pm2 restart pm2-start.json
 
                                 pm2 delete front-sangue-doce
+                                
                                 pm2 update
                                 
                                 pm2 start "yarn start" --name front-sangue-doce --watch
