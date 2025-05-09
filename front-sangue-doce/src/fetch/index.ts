@@ -92,3 +92,33 @@ export const fetchAbout = async <T>(): Promise<T> => {
   const data: T = await response.json();
   return data;
 };
+
+export const moreClicks = async <T>(
+  clicks: number,
+  documentId: string
+): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles/${documentId}?populate=*`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+
+  const body = {
+    data: {
+      clicks,
+    },
+  };
+
+  const response = await fetch(apiUrl, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+  return data;
+};

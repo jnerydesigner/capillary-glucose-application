@@ -3,6 +3,11 @@ export interface ResponseTypeArticles {
   meta: Meta;
 }
 
+export interface ResponseTypeArticlesUnit {
+  data: ArticleType;
+  meta: Meta;
+}
+
 export interface ResponseTypeHealthy {
   data: HealthyType[];
   meta: Meta;
@@ -50,6 +55,7 @@ export interface ArticleType {
   author: Author;
   category: Category;
   cover: Cover;
+  clicks: number;
 }
 
 export interface CategoryHealthy {

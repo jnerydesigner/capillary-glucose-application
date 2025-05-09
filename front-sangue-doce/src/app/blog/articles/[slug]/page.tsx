@@ -2,9 +2,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { fetchArticleBySlug, fetchSocialMediasBySlug } from "@/fetch";
+import {
+  fetchArticleBySlug,
+  fetchSocialMediasBySlug,
+  moreClicks,
+} from "@/fetch";
 import { RichTextRenderer } from "@/components/tich-text-rendering.tsx";
-import { ResponseTypeArticles } from "@/types/articles";
+import {
+  ResponseTypeArticles,
+  ResponseTypeArticlesUnit,
+} from "@/types/articles";
 import Image from "next/image";
 import { SocialsMediaType } from "@/types/social-media";
 import Link from "next/link";
@@ -12,7 +19,7 @@ import Link from "next/link";
 export default function Page() {
   const pathname = usePathname();
   const [slug, setSlug] = useState<string | undefined>(undefined);
-  const [article, setArticle] = useState<ResponseTypeArticles | null>(null);
+  const [article, setArticle] = useState<ResponseTypeArticlesUnit | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [socialMediaIcons, setSocialMediaIcons] = useState<React.ReactNode>([]);
@@ -32,7 +39,14 @@ export default function Page() {
       try {
         const data: ResponseTypeArticles = await fetchArticleBySlug(slug);
         console.log(data);
-        setArticle(data);
+        const qtdClicks = Number(data.data[0].clicks) + 1;
+        console.log("Quantidade de Clicks: " + qtdClicks);
+        const dataNew = await moreClicks<ResponseTypeArticlesUnit>(
+          qtdClicks,
+          data.data[0].documentId
+        );
+        console.log("DataNew", dataNew);
+        setArticle(dataNew);
       } catch {
         setError("Failed to load article");
       } finally {
@@ -47,7 +61,7 @@ export default function Page() {
     const fetchSocialMediaIcons = async () => {
       if (article) {
         const icons = await Promise.all(
-          article.data[0].author.social_media.social.map(async (social) => {
+          article.data.author.social_media.social.map(async (social) => {
             const socialMedia = await fetchSocialMediasBySlug<SocialsMediaType>(
               social.slug
             );
@@ -92,8 +106,8 @@ export default function Page() {
     <>
       <div className="w-full h-[500px]">
         <Image
-          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data[0].cover.url}`}
-          alt={article.data[0].title}
+          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data.cover.url}`}
+          alt={article.data.title}
           className="w-full h-full object-cover"
           width={1000}
           height={1000}
@@ -103,20 +117,20 @@ export default function Page() {
       <div className="w-full h-16 flex justify-start items-center gap-4">
         <div className="w-8 h-8">
           <Image
-            src={`${article.data[0].author.avatar_url}`}
-            alt={article.data[0].title}
+            src={`${article.data.author.avatar_url}`}
+            alt={article.data.title}
             className="w-full h-full object-cover rounded-full"
             width={1000}
             height={1000}
           />
         </div>
-        <h2>{article.data[0].author.name}</h2>
+        <h2>{article.data.author.name}</h2>
         {socialMediaIcons}
       </div>
       <h1 className="text-center text-3xl my-10 font-bold">
-        {article.data[0].title}
+        {article.data.title}
       </h1>
-      <RichTextRenderer content={article.data[0].contentNew} />
+      <RichTextRenderer content={article.data.contentNew} />
     </>
   );
 }
