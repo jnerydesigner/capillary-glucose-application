@@ -92,7 +92,7 @@ export default function Page() {
     <div className="p-10">
       <div className="w-full h-[500px]">
         <Image
-          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data[0].cover.url}`}
+          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data[0].cover.formats.large.url}`}
           alt={article.data[0].title}
           className="w-full h-full object-cover"
           width={1000}

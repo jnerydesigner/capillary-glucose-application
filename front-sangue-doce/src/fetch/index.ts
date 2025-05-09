@@ -73,3 +73,22 @@ export const fetchSocialMediasBySlug = async <T>(slug: string): Promise<T> => {
   const data: T = await response.json();
   return data;
 };
+
+export const fetchAbout = async <T>(): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/about?populate=*`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+  return data;
+};

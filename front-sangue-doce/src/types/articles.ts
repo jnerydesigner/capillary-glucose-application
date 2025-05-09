@@ -118,9 +118,23 @@ export interface Cover {
 }
 
 export interface Formats {
+  large: Large;
   small: Small;
   medium: Medium;
   thumbnail: Thumbnail;
+}
+
+export interface Large {
+  ext: string;
+  url: string;
+  hash: string;
+  mime: string;
+  name: string;
+  path: string;
+  size: number;
+  width: number;
+  height: number;
+  sizeInBytes: number;
 }
 
 export interface Small {

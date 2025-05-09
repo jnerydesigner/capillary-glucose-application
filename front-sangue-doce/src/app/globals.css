@@ -24,6 +24,16 @@
     border-bottom: 10px solid transparent;
   }
 
+  .title-general {
+    font-size: 2.4rem;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .paragraph-general {
+    text-align: justify;
+  }
+
 
 }
 

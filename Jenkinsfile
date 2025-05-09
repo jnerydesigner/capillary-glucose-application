@@ -56,8 +56,9 @@ pipeline {
                                     yarn install
                                     yarn build
 
-                                    pm2 start "yarn start" --name strapi-sangue-doce --watch --ignore-watch="node_modules" || pm2 restart "yarn start" --name strapi-sangue-doce --watch --ignore-watch="node_modules"
+                                    pm2 delete strapi-sangue-doce
 
+                                    pm2 start "yarn start" --name strapi-sangue-doce --watch
                                 }
 
                                 echo "Sem alterações no código do Strapi, deploy não necessário"
@@ -93,7 +94,10 @@ pipeline {
                                     yarn install
                                     yarn build
 
-                                    pm2 start "yarn start" --name front-sangue-doce --watch --ignore-watch="node_modules" || pm2 restart "yarn start" --name front-sangue-doce --watch --ignore-watch="node_modules"
+                                    pm2 delete front-sangue-doce
+
+                                    pm2 start "yarn start" --name front-sangue-doce --watch
+
                                 }
 
                                 echo "Sem alterações no código do Next, deploy não necessário"

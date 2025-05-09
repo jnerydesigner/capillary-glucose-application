@@ -23,7 +23,7 @@ export const HeroBlog = ({ articles }: Articles) => {
           </div>
           <div className="w-full h-[515px]">
             <Image
-              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${articles.data[0].cover.url}`}
+              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${articles.data[0].cover.formats.medium.url}`}
               alt={articles.data[0].title}
               className="w-full h-full object-cover"
               width={1000}
@@ -57,7 +57,7 @@ export const HeroBlog = ({ articles }: Articles) => {
                   <div>
                     <div className="w-full h-[250px]">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${notice.cover.url}`}
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${notice.cover.formats.medium.url}`}
                         alt={notice.title}
                         className="w-full h-full object-cover"
                         width={200}
