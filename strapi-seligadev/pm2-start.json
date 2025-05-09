@@ -1,0 +1,11 @@
+{
+    "apps": [
+        {
+            "name": "strapi-sangue-doce",
+            "script": "yarn",
+            "args": "start",
+            "autorestart": true,
+            "watch": true
+        }
+    ]
+}
