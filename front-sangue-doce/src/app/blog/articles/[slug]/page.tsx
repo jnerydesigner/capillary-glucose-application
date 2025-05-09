@@ -89,10 +89,10 @@ export default function Page() {
   }
 
   return (
-    <div className="p-10">
+    <>
       <div className="w-full h-[500px]">
         <Image
-          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data[0].cover.formats.large.url}`}
+          src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.data[0].cover.url}`}
           alt={article.data[0].title}
           className="w-full h-full object-cover"
           width={1000}
@@ -117,6 +117,6 @@ export default function Page() {
         {article.data[0].title}
       </h1>
       <RichTextRenderer content={article.data[0].contentNew} />
-    </div>
+    </>
   );
 }
