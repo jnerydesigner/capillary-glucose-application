@@ -9,7 +9,7 @@ interface Articles {
 
 export const HeroBlog = ({ articles }: Articles) => {
   return (
-    <section className="grid grid-cols-3 gap-4 px-4 my-4">
+    <section className="flex justify-center items-center flex-col md:grid md:grid-cols-3 gap-4 px-4 mt-10 md:my-4">
       <Link
         href={`/blog/articles/${articles.data[0].slug}`}
         className="col-span-1 relative rounded-lg overflow-hidden shadow-md"
@@ -44,7 +44,7 @@ export const HeroBlog = ({ articles }: Articles) => {
           </div>
         </div>
       </Link>
-      <div className="col-span-2 grid grid-cols-2 grid-rows-2 gap-4">
+      <div className="flex justify-center items-center flex-col md:col-span-2 md:grid md:grid-cols-2 md:grid-rows-2 gap-4">
         {articles.data &&
           articles.data.map((notice) => {
             if (notice.id !== articles.data[0].id) {
