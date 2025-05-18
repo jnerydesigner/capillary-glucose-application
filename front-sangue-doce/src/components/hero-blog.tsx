@@ -3,11 +3,13 @@ import { ResponseTypeArticles } from "@/types/articles";
 import Image from "next/image";
 import Link from "next/link";
 import { FaRegHeart } from "react-icons/fa";
+
 interface Articles {
   articles: ResponseTypeArticles;
 }
 
 export const HeroBlog = ({ articles }: Articles) => {
+  console.log("HeroBlog", articles);
   return (
     <section className="flex justify-center items-center flex-col md:grid md:grid-cols-3 gap-4 px-4 mt-10 md:my-4">
       <Link

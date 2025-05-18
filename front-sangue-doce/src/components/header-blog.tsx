@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export const HeaderBlog = () => {
   return (
-    <div className="w-full h-auto md:h-[95px] bg-white flex justify-between items-center flex-col md:flex-row px-4 shadow-2xs pb-6">
+    <div className="container mx-auto h-auto md:h-[100px] bg-white flex justify-between items-center flex-col md:flex-row px-4 shadow-2xs">
       <div className="h-10 w-10 md:h-20 md:w-20 rounded-full shadow-2xs">
         <Image
           src="/sangue-doce-logo.png"

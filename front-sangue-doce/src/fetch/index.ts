@@ -122,3 +122,96 @@ export const moreClicks = async <T>(
   const data: T = await response.json();
   return data;
 };
+
+export const getArticleWithMoreClick = async (slug: string) => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?sort[0]=clicks:desc&sort[1]=publishedAt:desc&populate=*&pagination[limit]=3&filters[slug][$ne]=${slug}`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const fetchHealthyRecipes = async <T>(
+  pagination: string
+): Promise<T> => {
+  let paginate = "";
+  if (pagination !== "") {
+    paginate = `&${pagination}`;
+  }
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/healthy-recipies?sort=publishedAt:desc&populate=*${paginate}`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+  return data;
+};
+
+export const fetchHealthyRecipesSlug = async <T>(slug: string): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/healthy-recipies?sort=publishedAt:desc&populate=*&filters[slug][$eq]=${slug}`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+  return data;
+};
+
+export const fetchHealthyRecipesSlugNot = async <T>(
+  slug: string
+): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/healthy-recipies?sort=publishedAt:desc&populate=*&filters[slug][$ne]=${slug}&filters[stars][$gte]=4`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    next: {
+      tags: ["healthy-recipes"],
+    },
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+  return data;
+};

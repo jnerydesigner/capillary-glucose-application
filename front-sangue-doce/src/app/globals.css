@@ -30,8 +30,13 @@
     font-weight: bold;
   }
 
+
   .paragraph-general {
     text-align: justify;
+  }
+
+  .h1_text {
+    font-size: 4rem;
   }
 
 
