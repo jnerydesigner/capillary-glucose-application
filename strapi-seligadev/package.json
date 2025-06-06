@@ -30,7 +30,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "slugify": "^1.6.6",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "tar-fs": "^3.0.9"
   },
   "devDependencies": {
     "@types/node": "^20",
