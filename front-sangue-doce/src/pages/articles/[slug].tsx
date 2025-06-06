@@ -16,7 +16,6 @@ export default function Page() {
     const fetchArticle = async () => {
       try {
         const data = await fetchArticleBySlug(slug as string);
-        console.log(data);
         setArticle(data);
       } catch {
         setError("Failed to load article");

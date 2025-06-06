@@ -68,7 +68,7 @@ export function RichTextRenderer({ content }: RichTextProps) {
     if (node.type === "list") {
       const ListTag = node.format === "ordered" ? "ol" : "ul";
       return (
-        <ListTag key={index} className="ml-8 my-4">
+        <ListTag key={index} className="md:ml-8 my-4">
           {node.children?.map((child, i) => renderNode(child, i))}
         </ListTag>
       );
@@ -81,7 +81,7 @@ export function RichTextRenderer({ content }: RichTextProps) {
           className="w-full flex justify-between items-center my-2"
         >
           <FaArrowRight className="w-10 ml-4 mr-2" />
-          <span className="w-[95%] p-2">
+          <span className="w-full md:w-[95%] p-0 md:p-2">
             {node.children?.map((child, i) => renderNode(child, i))}
           </span>
         </li>
@@ -92,7 +92,7 @@ export function RichTextRenderer({ content }: RichTextProps) {
   };
 
   return (
-    <div className="w-200 mx-auto flex justify-center items-start flex-col px-10">
+    <div className="w-full h-auto md:w-200 mx-auto flex justify-center items-start flex-col px-0">
       {content.map((node, index) => renderNode(node, index))}
     </div>
   );

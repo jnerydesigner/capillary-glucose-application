@@ -8,18 +8,20 @@ import Link from "next/link";
 export const HeaderBlog = () => {
   return (
     <div className="container mx-auto h-auto md:h-[100px] bg-white flex justify-between items-center flex-col md:flex-row px-4 shadow-2xs">
-      <div className="h-10 w-10 md:h-20 md:w-20 rounded-full shadow-2xs">
-        <Image
-          src="/sangue-doce-logo.png"
-          alt="logo da sangue doce"
-          className="rounded-full"
-          width={500}
-          height={500}
-          priority
-        />
-      </div>
+      <Link href="/">
+        <div className="h-10 w-10 md:h-20 md:w-20 rounded-full shadow-2xs pt-2 md:pt-0">
+          <Image
+            src="/sangue-doce-logo.png"
+            alt="logo da sangue doce"
+            className="rounded-full"
+            width={500}
+            height={500}
+            priority
+          />
+        </div>
+      </Link>
       <NavbarBlog />
-      <div className="flex justify-center items-center flex-row gap-6 mt-2 md:mt-0">
+      <div className="w-60 h-12 p-2 md:w-70 md:h-16 flex justify-center items-center flex-row gap-6 mt-2 md:mt-0">
         <div className="relative">
           <FaRegHeart />
           <p className="absolute text-[0.6rem] text-white top-[-10px] right-0 font-bold bg-red-500 rounded-full w-3.5 text-center">

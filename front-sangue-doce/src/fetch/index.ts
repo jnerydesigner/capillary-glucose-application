@@ -1,5 +1,33 @@
-export const fetchArticles = async (pagination: string) => {
-  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?sort=publishedAt:desc&populate=*&${pagination}`;
+export const fetchArticles = async (pagination: string, slug: string = "") => {
+  console.log("" + slug);
+  let apiUrl = "";
+  if (slug !== "") {
+    apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?sort=publishedAt:desc&populate=*&${pagination}&filters[slug][$ne]=${slug}`;
+  } else {
+    apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?sort=publishedAt:desc&populate=*&${pagination}`;
+  }
+
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const fetchArticlesNotSlug = async (slug: string) => {
+  console.log("Slug " + slug);
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?sort=publishedAt:desc&populate=*&pagination[limit]=5&filters[slug][$ne]=${slug}`;
+
   const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
 
   const response = await fetch(apiUrl, {
@@ -213,5 +241,31 @@ export const fetchHealthyRecipesSlugNot = async <T>(
   }
 
   const data: T = await response.json();
+  return data;
+};
+
+export const fetchArticlesMoreRead = async <T>(): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/articles?populate=*&pagination[limit]=5&sort=publishedAt:desc&sort=clicks:desc`;
+  const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+  const response = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    next: {
+      tags: ["healthy-recipes"],
+    },
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+
   return data;
 };

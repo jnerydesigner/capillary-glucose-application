@@ -5,18 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface AsideNewsProps {
-  articlesData: ResponseTypeArticles;
+  slug: string;
 }
 
 export const revalidate = 3600;
 
-export const AsideNews = async ({ articlesData }: AsideNewsProps) => {
-  const articles: ResponseTypeArticles = await getArticleWithMoreClick(
-    articlesData.data[0].slug
-  );
+export const AsideNews = async ({ slug }: AsideNewsProps) => {
+  const articles: ResponseTypeArticles = await getArticleWithMoreClick(slug);
 
   return (
-    <aside className="col-span-3 flex justify-start items-center flex-col p-2">
+    <aside className="flex justify-start items-center flex-col p-2">
       <div className="w-full h-10 bg-gray-100 flex justify-start items-center">
         <h1 className="text-center w-full">Mais Vistos</h1>
       </div>
