@@ -34,11 +34,12 @@ export const transformedGlucose = (capillaryBloodGlucose) => {
 };
 
 export const transformGlucoseAscending = (capillaryBloodGlucose) => {
+  console.log('capillaryBloodGlucose', JSON.stringify(capillaryBloodGlucose));
   const fixedTimes = ['06:00', '08:00', '11:00', '13:00', '18:00', '22:00'];
   const groupedData = {};
 
   for (const record of capillaryBloodGlucose) {
-    let dateTime = record.dateTimeCollect;
+    let dateTime = record.dateTimeCollect.toISOString();
     if (dateTime.includes('T')) {
       dateTime = dateTime.split('T')[0];
     } else if (dateTime.includes(' ')) {

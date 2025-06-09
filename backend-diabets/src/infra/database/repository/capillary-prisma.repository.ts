@@ -11,6 +11,7 @@ import { getPeriod } from '@app/infra/utils/format-period.utils';
 import { formatTmz } from '@app/infra/utils/format-date-time.utils';
 import { CapillaryInterface } from '@app/domain/interfaces/capillary.interface';
 import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
+import { Prisma } from '@prisma/client';
 
 export class CapillaryPrismaImplements implements CapillaryInterface {
   private logger: Logger;
@@ -68,19 +69,16 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     });
   }
 
-  async findOneNew(id: number, data: GlucoseResponse): Promise<any> {
+  async findOneNew(id: number, data: GlucoseResponse): Promise<void> {
     const user = await this.prisma.user.findFirst({
       where: {
         id,
       },
     });
-    console.log(user);
 
     if (!user) {
       throw new NotFoundException();
     }
-
-    console.log('Data 0', data[0]);
 
     const dataResponse = data.glucose.map((gli) => {
       return CapillaryMapper.toPersistentJson(user, gli);
@@ -103,7 +101,7 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
       throw new NotFoundException();
     }
 
-    return CapillaryMapper.toResponseNewCollect(userResponse);
+    // return CapillaryMapper.toResponseNewCollect(userResponse);
   }
 
   async findCapillary(
@@ -111,24 +109,25 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     dateInitial: string,
     dateFinal: string,
   ): Promise<UserResponse> {
-    const userRaw: any[] = await this.prisma.$queryRaw`
-    SELECT 
-      us.id as user_id,
-      us.name,
-      us.email,
-      cbg.id,
-      cbg.value,
-      cbg.date_time_collect,
-      cbg.period,
-      cbg.user_id as cbg_user_id
-    FROM users us
-    LEFT JOIN capillary_blood_glucose cbg ON cbg.user_id = us.id
-    WHERE us.id = ${id}
-    AND cbg.date_time_collect BETWEEN ${dateInitial} AND ${dateFinal}
-    ORDER BY cbg.date_time_collect DESC;
-  `;
+    this.logger.log(id, dateInitial, dateFinal);
 
-    console.log(userRaw[0]);
+    const userRaw = await this.prisma.$queryRaw<any[]>(Prisma.sql`
+      SELECT 
+        us.id as user_id,
+        us.name,
+        us.email,
+        cbg.id,
+        cbg.value,
+        cbg.date_time_collect,
+        cbg.period,
+        cbg.user_id as cbg_user_id
+      FROM users us
+      LEFT JOIN capillary_blood_glucose cbg 
+        ON cbg.user_id = us.id
+      WHERE us.id = ${id}
+        AND cbg.date_time_collect::timestamptz BETWEEN ${new Date(dateInitial)} AND ${new Date(dateFinal)}
+      ORDER BY cbg.date_time_collect::timestamptz DESC;
+    `);
 
     const transformRaw = this.transformToUserWithGlucose(userRaw);
 
@@ -170,4 +169,10 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
       capillaryBloodGlucose,
     };
   }
+}
+
+function fixDateTime(date: string): string {
+  // Ex: entrada: "25-06-30T22:00:00.447Z"
+  const [yy, mm, rest] = date.split('-');
+  return `20${yy}-${mm}-${rest}`; // retorna "2025-06-30T22:00:00.447Z"
 }

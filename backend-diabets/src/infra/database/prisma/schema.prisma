@@ -19,11 +19,11 @@ model User {
 }
 
 model CapillaryBloodGlucose {
-  id                Int    @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   value             Int
-  date_time_collect String
+  date_time_collect DateTime
   period            String
-  User              User?  @relation(fields: [user_id], references: [id])
+  User              User?    @relation(fields: [user_id], references: [id])
   user_id           Int?
 
   @@map("capillary_blood_glucose")

@@ -44,8 +44,6 @@ export class AuthService {
 
     const access_token = await this.jwtService.signAsync(payload);
 
-    console.log(access_token);
-
     return {
       access_token,
     };

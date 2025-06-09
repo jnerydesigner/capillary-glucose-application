@@ -34,6 +34,7 @@ export class CapillaryBloodGlucoseService {
   findOne(userId: number) {
     return this.capillaryRepository.findOne(userId);
   }
+
   async findOneNew(userId: number) {
     const readGlucose = await this.createGlucoseCsv();
 
@@ -67,12 +68,14 @@ export class CapillaryBloodGlucoseService {
   }
 
   async findCapillary(userId: number, dateInitial: string, dateFinal: string) {
-    this.logger.log(dateInitial + ' : ' + dateFinal);
+    this.logger.log(userId + ' - ' + dateInitial + ' : ' + dateFinal);
     const response = await this.capillaryRepository.findCapillary(
       userId,
       dateInitial,
       dateFinal,
     );
+
+    this.logger.log(JSON.stringify(response));
 
     return response;
   }
@@ -88,7 +91,8 @@ export class CapillaryBloodGlucoseService {
       dateInitial,
       dateFinal,
     );
-    console.log(response[0]);
+
+    this.logger.log('Response: ' + JSON.stringify(response));
     const datePeriodFormated = DatePeriodFormated(dateInitial, dateFinal);
 
     this.reportService.generateReport(response, datePeriodFormated, res);

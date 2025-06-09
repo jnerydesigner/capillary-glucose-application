@@ -63,6 +63,8 @@ export class ReportService {
 
     const glucoseRead = transformGlucoseAscending(data.capillaryBloodGlucose);
 
+    console.log('glucoseRead', JSON.stringify(glucoseRead));
+
     const titles = this.generateTitlesHeaderTable();
 
     const tableBody = [titles];

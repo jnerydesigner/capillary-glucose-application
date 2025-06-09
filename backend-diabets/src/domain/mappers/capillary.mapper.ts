@@ -22,10 +22,12 @@ export class CapillaryMapper {
     user: User,
     glucose: GlucoseMeasurement,
   ): PersistentDataTypeUserGlucose {
+    const date_time_collect = DataHourJoin(glucose.data, glucose.hora);
+    console.log(date_time_collect);
     return {
       user_id: user.id,
       value: glucose.value,
-      date_time_collect: DataHourJoin(glucose.data, glucose.hora),
+      date_time_collect,
       period: glucose.hora,
     };
   }
@@ -33,13 +35,13 @@ export class CapillaryMapper {
   static toResponseNewCollect(user: UserWithGlucose): UserResponse {
     return {
       id: user.id,
-      name: user.name ? user.name : '',
+      name: user.name ?? '',
       email: user.email,
       capillaryBloodGlucose: user.capillary_blood_glucose.map((capillary) => {
         return {
           id: capillary.id,
-          userId: capillary.user_id ? capillary.user_id : 1,
-          dateTimeCollect: capillary.date_time_collect,
+          userId: capillary.user_id ?? 1,
+          dateTimeCollect: capillary.date_time_collect.toISOString(),
           period: capillary.period,
           value: capillary.value,
         };
@@ -51,7 +53,7 @@ export class CapillaryMapper {
 export type CapillaryBloodGlucoseOutput = {
   id: number;
   value: number;
-  dateTimeCollect: string;
+  dateTimeCollect: Date;
   period: string;
   userId: number;
 };
@@ -69,7 +71,7 @@ export const DataHourJoin = (date: string, hour: string): string => {
   const monthSplit = dateSplit[1];
   const daySplit = dateSplit[0];
 
-  const isoString = `${yearSplit}-${monthSplit}-${daySplit}T${hour}:00.447Z`;
+  const isoString = `20${yearSplit}-${monthSplit}-${daySplit}T${hour}:00.447Z`;
   return isoString;
 };
 

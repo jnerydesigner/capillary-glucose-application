@@ -52,7 +52,9 @@ export const DatePeriodFormated = (dateInitial: string, dateFinal: string) => {
   const monthFinal = dateFinalSplit[1];
   const dayFinal = dateFinalSplit[2];
 
-  return `${dayInitial}/${monthInitial}/${yearInitial} até ${dayFinal}/${monthFinal}/${yearFinal}`;
+  const datePeriod = `${dayInitial}/${monthInitial}/${yearInitial} até ${dayFinal}/${monthFinal}/${yearFinal}`;
+
+  return datePeriod;
 };
 
 // 2025-03-25T00:00:00.000Z 2025-04-17T23:59:59.999Z

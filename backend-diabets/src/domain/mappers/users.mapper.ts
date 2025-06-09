@@ -11,7 +11,7 @@ interface RawUser {
 interface InputCapillary {
   capillaryId: number;
   value: number;
-  dateTimeCollect: string;
+  dateTimeCollect: Date;
   period: string;
 }
 
@@ -24,7 +24,7 @@ interface InputUser {
 
 interface OutputCapillaryGlucose {
   value: number;
-  dateTimeCollect: string;
+  dateTimeCollect: Date;
 }
 
 interface OutputCapillary {
@@ -95,7 +95,7 @@ export class UsersMapper {
     input.capillary.forEach((cap: InputCapillary) => {
       const glucoseData: OutputCapillaryGlucose = {
         value: cap.value,
-        dateTimeCollect: cap.dateTimeCollect,
+        dateTimeCollect: new Date(cap.dateTimeCollect),
       };
       const existing = periodMap.get(cap.period);
       if (existing) {
@@ -108,17 +108,18 @@ export class UsersMapper {
     const capillaryOutput: OutputCapillary[] = defaultPeriods.map((period) => {
       const existingData: OutputCapillaryGlucose[] =
         periodMap.get(period) || [];
+
       const capillaryGlucose: OutputCapillaryGlucose[] =
         existingData.length > 0
           ? existingData
           : [
               {
                 value: Math.floor(Math.random() * (200 - 100 + 1)) + 100,
-                dateTimeCollect: '28/03/2025',
+                dateTimeCollect: new Date('2025-03-28'),
               },
               {
                 value: Math.floor(Math.random() * (200 - 100 + 1)) + 100,
-                dateTimeCollect: '29/03/2025',
+                dateTimeCollect: new Date('2025-03-29'),
               },
             ];
 
@@ -134,5 +135,10 @@ export class UsersMapper {
       name: input.name,
       capillary: capillaryOutput,
     };
+  }
+
+  isValidDateBrFormat(dateStr: string): boolean {
+    // Verifica se está no formato DD/MM/YYYY
+    return /^\d{2}\/\d{2}\/\d{4}$/.test(dateStr);
   }
 }

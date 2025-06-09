@@ -17,6 +17,7 @@ export class CapillaryBloodGlucoseController {
   findOne(@Param('userId') userid: string) {
     return this.capillaryBloodGlucoseService.findOne(parseInt(userid));
   }
+
   @Post('/:userId/new')
   async findOneNew(@Param('userId') userid: string) {
     return this.capillaryBloodGlucoseService.findOneNew(parseInt(userid));
@@ -42,7 +43,6 @@ export class CapillaryBloodGlucoseController {
     @Query('dateFinal') dateFinal: string,
     @Res() res: Response,
   ) {
-    console.log(dateInitial, dateFinal);
     return this.capillaryBloodGlucoseService.generateReport(
       parseInt(userid),
       dateInitial,

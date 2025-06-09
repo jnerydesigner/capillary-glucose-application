@@ -6,7 +6,7 @@ import { UserResponse } from '@app/domain/mappers/capillary.mapper';
 export interface CapillaryInterface {
   create(capillary: CreateCapillaryDTO): Promise<any>;
   findOne(userId: number): Promise<any>;
-  findOneNew(id: number, data: GlucoseResponse): Promise<any>;
+  findOneNew(id: number, data: GlucoseResponse): Promise<void>;
   findCapillary(
     userId: number,
     dateInitial: string,
