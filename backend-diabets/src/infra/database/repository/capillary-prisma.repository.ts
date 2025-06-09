@@ -170,9 +170,3 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     };
   }
 }
-
-function fixDateTime(date: string): string {
-  // Ex: entrada: "25-06-30T22:00:00.447Z"
-  const [yy, mm, rest] = date.split('-');
-  return `20${yy}-${mm}-${rest}`; // retorna "2025-06-30T22:00:00.447Z"
-}
