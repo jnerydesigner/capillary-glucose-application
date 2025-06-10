@@ -60,7 +60,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <>
-      <main className="h-auto col-span-12 md:col-span-9 flex justify-start items-center flex-col p-2">
+      <main className="h-auto col-span-12 md:col-span-9 flex justify-start items-center flex-col p-2 bg-white mt-2">
         <div className="w-full h-50 md:h-[500px]">
           <Image
             src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${articleUnit.data.cover.url}`}

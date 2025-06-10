@@ -4,9 +4,23 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     remotePatterns: [
-      new URL("http://localhost:1337/**"),
-      new URL("http://191.101.78.119:8091/**"),
-      new URL("https://github.com/**"),
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "191.101.78.119",
+        port: "1337",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "github.com",
+        pathname: "/**",
+      },
     ],
   },
   reactStrictMode: true,

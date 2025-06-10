@@ -1,3 +1,10 @@
-export default function Login() {
-  return <h1>Login</h1>;
+export default async function Login() {
+  return (
+    <div>
+      <div>
+        <div>imagem</div>
+        <div>formulário de login</div>
+      </div>
+    </div>
+  );
 }

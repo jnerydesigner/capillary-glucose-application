@@ -1,6 +1,6 @@
 import { HeaderBlog } from "@/components/header-blog";
 import { HeroBlog } from "@/components/hero-blog";
-import { MostReadOfTheWeek } from "@/components/most-read-of-the-week";
+// import { MostReadOfTheWeek } from "@/components/most-read-of-the-week";
 
 import { fetchArticles } from "@/fetch";
 import { ResponseTypeArticles } from "@/types/articles";
@@ -11,6 +11,7 @@ export default async function Home() {
     "pagination[limit]=5",
     ""
   );
+  console.log("Articles fetched:", articles);
   console.log("Tempo total da fetchArticles:", Date.now() - start, "ms");
 
   return (
@@ -18,7 +19,7 @@ export default async function Home() {
       <HeaderBlog />
       <main className=" container mx-auto relative min-h-screen overflow-hidden">
         <HeroBlog articles={articles} />
-        <MostReadOfTheWeek />
+        {/* <MostReadOfTheWeek /> */}
       </main>
     </>
   );

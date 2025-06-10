@@ -27,7 +27,7 @@ export const AsideNews = async ({ slug }: AsideNewsProps) => {
         >
           <div className="w-full">
             <Image
-              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.cover.formats.medium.url}`}
+              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.cover.url}`}
               alt={article.title}
               className="w-full h-full object-cover"
               width={1000}

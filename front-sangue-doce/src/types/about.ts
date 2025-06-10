@@ -8,6 +8,7 @@ export interface AboutDetails {
   documentId: string;
   about: string;
   content: string;
+  content_md: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;

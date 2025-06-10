@@ -61,7 +61,7 @@ export const NavbarBlog = () => {
       >
         <ul
           className={cn(
-            "flex flex-col md:flex-row md:items-center md:gap-6 mt-4 md:mt-0",
+            "flex flex-row md:items-center md:gap-6 mt-4 md:mt-0",
             "bg-white md:bg-transparent w-full md:w-auto p-4 md:p-0 rounded shadow md:shadow-none"
           )}
         >
@@ -71,7 +71,7 @@ export const NavbarBlog = () => {
                 href={item.href}
                 onClick={() => setActive(item.href)}
                 className={cn(
-                  "flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-100 md:hover:bg-transparent",
+                  "flex items-center flex-col sm:flex-row gap-2 py-2 px-4 rounded hover:bg-gray-100 md:hover:bg-transparent",
                   active === item.href
                     ? "font-semibold text-primary border-b-2 border-primary md:border-none"
                     : "text-muted-foreground"

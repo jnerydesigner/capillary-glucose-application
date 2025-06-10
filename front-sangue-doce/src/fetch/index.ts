@@ -8,6 +8,7 @@ export const fetchArticles = async (pagination: string, slug: string = "") => {
   }
 
   const token = process.env.NEXT_PUBLIC_STRAPI_BEARER_TOKEN;
+  console.log("API URL: " + apiUrl);
 
   const response = await fetch(apiUrl, {
     method: "GET",
@@ -15,6 +16,8 @@ export const fetchArticles = async (pagination: string, slug: string = "") => {
       Authorization: `Bearer ${token}`,
     },
   });
+
+  console.log("Response: " + response.status);
 
   if (!response.ok) {
     throw new Error("Not valid");
