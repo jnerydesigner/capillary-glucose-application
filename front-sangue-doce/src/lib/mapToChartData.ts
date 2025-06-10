@@ -1,25 +1,24 @@
-type RichDataPoint = {
+import { GlucoseRead } from "@/components/chart-medition";
+
+type TimeSlot = "06:00" | "08:00" | "11:00" | "13:00" | "18:00" | "22:00";
+
+export type SimplifiedChartData = {
   data: string;
-  [time: string]: any;
+} & {
+  [key in TimeSlot]: number | null;
 };
 
-interface ChartDataPoint {
-  data: string;
-  [key: string]: number | string | null;
-}
-
-export const mapToChartData = (input: RichDataPoint[]): ChartDataPoint[] => {
+export const mapToChartData = (input: GlucoseRead[]): SimplifiedChartData[] => {
   return input.map((item) => {
-    const mapped: ChartDataPoint = {
-      data: item.data.slice(0, 5),
+    const mapped: SimplifiedChartData = {
+      data: item.data,
+      "06:00": item["06:00"]?.value ?? null,
+      "08:00": item["08:00"]?.value ?? null,
+      "11:00": item["11:00"]?.value ?? null,
+      "13:00": item["13:00"]?.value ?? null,
+      "18:00": item["18:00"]?.value ?? null,
+      "22:00": item["22:00"]?.value ?? null,
     };
-
-    Object.entries(item).forEach(([key, value]) => {
-      if (key !== "data") {
-        mapped[key] = value?.value ?? 0;
-      }
-    });
-
     return mapped;
   });
 };

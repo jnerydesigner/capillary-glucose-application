@@ -15,7 +15,6 @@ type TableProps = {
 };
 
 export const TableCapillary: React.FC<TableProps> = ({ dataTable }) => {
-  console.log("Componente table", dataTable);
   return (
     <Table>
       <TableCaption>Lista de Medições.</TableCaption>

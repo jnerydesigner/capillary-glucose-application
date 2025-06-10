@@ -272,3 +272,28 @@ export const fetchArticlesMoreRead = async <T>(): Promise<T> => {
 
   return data;
 };
+
+export const fetchGlucoseRead = async <T>(
+  dataInitial: string,
+  dateFinal: string
+): Promise<T> => {
+  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/capillary/1/capillary?dateInitial=${dataInitial}&dateFinal=${dateFinal}`;
+
+  const response = await fetch(apiUrl, {
+    method: "GET",
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Not valid");
+  }
+
+  if (!response.ok) {
+    throw new Error("Not valid");
+  }
+
+  const data: T = await response.json();
+
+  console.log("Glucose Read Data: ", data);
+
+  return data;
+};

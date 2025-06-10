@@ -18,7 +18,16 @@ import {
   ReferenceLine,
   Cell,
 } from "recharts";
-import { mapToChartData } from "@/lib/mapToChartData";
+import { mapToChartData, SimplifiedChartData } from "@/lib/mapToChartData";
+import { subDays } from "date-fns";
+
+const today = new Date();
+
+const sevenDaysAgo = subDays(today, 6);
+const parseDate = (str: string) => {
+  const [day, month, year] = str.split("/").map(Number);
+  return new Date(year, month - 1, day);
+};
 
 type ValueWithClass = {
   value: number | null;
@@ -27,12 +36,8 @@ type ValueWithClass = {
 
 export type GlucoseRead = {
   data: string;
-  "06:00": ValueWithClass;
-  "08:00": ValueWithClass;
-  "11:00": ValueWithClass;
-  "13:00": ValueWithClass;
-  "18:00": ValueWithClass;
-  "22:00": ValueWithClass;
+} & {
+  [key in TimeSlot]: ValueWithClass;
 };
 
 const chartConfig = {
@@ -68,16 +73,6 @@ type TableProps = {
 
 type TimeSlot = "06:00" | "08:00" | "11:00" | "13:00" | "18:00" | "22:00";
 
-type ChartData = {
-  data: string;
-  "06:00": number | null;
-  "08:00": number | null;
-  "11:00": number | null;
-  "13:00": number | null;
-  "18:00": number | null;
-  "22:00": number | null;
-};
-
 export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
   if (!chartDataProps || chartDataProps.length === 0) {
     return (
@@ -90,13 +85,28 @@ export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
     );
   }
 
-  const sortedChartData = [...chartDataProps].sort((a, b) => {
+  const filteredData = chartDataProps.filter((item) => {
+    const date = parseDate(item.data);
+    return date >= sevenDaysAgo && date <= today;
+  });
+
+  const sortedChartData = [...filteredData].sort((a, b) => {
     const dateA = new Date(a.data.split("/").reverse().join("-"));
     const dateB = new Date(b.data.split("/").reverse().join("-"));
     return dateB.getTime() - dateA.getTime();
   });
 
-  const limitedChartData = sortedChartData.slice(0, 7);
+  const uniqueDates = new Set<string>();
+  const limitedChartData: GlucoseRead[] = [];
+
+  for (const item of sortedChartData) {
+    if (!uniqueDates.has(item.data)) {
+      uniqueDates.add(item.data);
+      limitedChartData.push(item);
+    }
+
+    if (uniqueDates.size === 7) break;
+  }
 
   const calculateAverage = (data: GlucoseRead[]) => {
     const timeSlots: TimeSlot[] = [
@@ -161,7 +171,7 @@ export const GlucoseChart = ({ chartData: chartDataProps }: TableProps) => {
     return defaultColor;
   };
 
-  const chartRowData: ChartData[] = mapToChartData(limitedChartData);
+  const chartRowData: SimplifiedChartData[] = mapToChartData(limitedChartData);
 
   const orderedChartRowData = [...chartRowData].sort((a, b) => {
     const dateA = new Date(a.data.split("/").reverse().join("-"));

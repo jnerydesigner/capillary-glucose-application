@@ -12,6 +12,7 @@ import { formatTmz } from '@app/infra/utils/format-date-time.utils';
 import { CapillaryInterface } from '@app/domain/interfaces/capillary.interface';
 import { CreateCapillaryDTO } from '@app/application/dto/create.dto';
 import { Prisma } from '@prisma/client';
+import { getAddOfDayInTimezone } from '@app/infra/utils/end-add-day.tz.util';
 
 export class CapillaryPrismaImplements implements CapillaryInterface {
   private logger: Logger;
@@ -104,12 +105,28 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
     // return CapillaryMapper.toResponseNewCollect(userResponse);
   }
 
+  // todo
   async findCapillary(
     id: number,
     dateInitial: string,
     dateFinal: string,
   ): Promise<UserResponse> {
-    this.logger.log(id, dateInitial, dateFinal);
+    const dateFinalConverted = getAddOfDayInTimezone(dateFinal);
+
+    const glucose = await this.prisma.capillaryBloodGlucose.findMany({
+      where: {
+        user_id: id,
+      },
+      select: {
+        id: true,
+        value: true,
+        date_time_collect: true,
+        period: true,
+        user_id: true,
+      },
+    });
+
+    this.logger.log(JSON.stringify(glucose[0]));
 
     const userRaw = await this.prisma.$queryRaw<any[]>(Prisma.sql`
       SELECT 
@@ -125,7 +142,7 @@ export class CapillaryPrismaImplements implements CapillaryInterface {
       LEFT JOIN capillary_blood_glucose cbg 
         ON cbg.user_id = us.id
       WHERE us.id = ${id}
-        AND cbg.date_time_collect::timestamptz BETWEEN ${new Date(dateInitial)} AND ${new Date(dateFinal)}
+        AND cbg.date_time_collect::timestamptz BETWEEN ${new Date(dateInitial)} AND ${dateFinalConverted}
       ORDER BY cbg.date_time_collect::timestamptz DESC;
     `);
 

@@ -25,6 +25,8 @@ export type GlucoseRead = {
   "22:00": ValueWithClass;
 };
 
+
+
 interface ReturnedDataGlucose {
   id: number;
   userId: number;
