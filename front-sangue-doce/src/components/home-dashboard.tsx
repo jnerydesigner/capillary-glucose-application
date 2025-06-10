@@ -76,12 +76,15 @@ interface Props {
   initialData: { capillaryBloodGlucose: ReturnedDataGlucose[] } | null;
 }
 
-export default function GlucoseHomeClient({ initialData }: Props) {
+export default function HomeDashBoard({ initialData }: Props) {
   const [data, setData] = useState<ReturnedDataGlucose[]>(
     initialData?.capillaryBloodGlucose || []
   );
 
-  const handleFormSubmit = async (dataForm: { dateInitial: Date; dateFinal: Date }) => {
+  const handleFormSubmit = async (dataForm: {
+    dateInitial: Date;
+    dateFinal: Date;
+  }) => {
     const dateInitial = new Date(dataForm.dateInitial);
     const dateFinal = new Date(dataForm.dateFinal);
 
@@ -90,7 +93,6 @@ export default function GlucoseHomeClient({ initialData }: Props) {
 
     dateFinal.setUTCHours(23, 59, 59, 999);
     const dateFinalISO = dateFinal.toISOString();
-
 
     const response = await fetchCapillary({
       dateInitial: dateInitialISO,
