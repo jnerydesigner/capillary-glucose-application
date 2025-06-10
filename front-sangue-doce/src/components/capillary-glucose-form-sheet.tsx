@@ -9,9 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { createCapillary } from "@/fetch/glucose";
+import type { CapillaryCreateBody } from "@/types/capillary-request";
 
 
 type CapillaryGlucoseFormProps = React.ComponentProps<"div"> & {
@@ -29,13 +32,24 @@ export function CapillaryGlucoseFormSheet({
   onClose,
   ...props
 }: CapillaryGlucoseFormProps) {
-  const { register, handleSubmit, watch } = useForm<glucoseType>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<glucoseType>({
     resolver: zodResolver(GlucoseSchema),
   });
 
-  const onSubmit: SubmitHandler<glucoseType> = (data) => {
-    console.log(data);
-    if (onClose) onClose();
+  const onSubmit: SubmitHandler<glucoseType> = async (data) => {
+    const payload: CapillaryCreateBody = { value: data.value, userId: 1 };
+    try {
+      await createCapillary(payload);
+      toast("Medição criada com sucesso!");
+      if (onClose) onClose();
+    } catch (err) {
+      toast("Erro ao criar medição");
+    }
   };
 
   console.log(watch("value"));
@@ -59,6 +73,9 @@ export function CapillaryGlucoseFormSheet({
                   required
                   {...register("value")}
                 />
+                {errors.value && (
+                  <span className="text-sm text-red-500">{errors.value.message}</span>
+                )}
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full cursor-pointer">
