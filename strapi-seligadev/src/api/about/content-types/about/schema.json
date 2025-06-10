@@ -22,6 +22,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::author.author"
+    },
+    "content_md": {
+      "type": "richtext"
     }
   }
 }

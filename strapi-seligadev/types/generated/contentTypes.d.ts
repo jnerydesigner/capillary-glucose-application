@@ -384,6 +384,7 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
     about: Schema.Attribute.String;
     author: Schema.Attribute.Relation<'oneToOne', 'api::author.author'>;
     content: Schema.Attribute.Text;
+    content_md: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
